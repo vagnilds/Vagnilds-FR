@@ -1349,26 +1349,7 @@ Configurar
 </div>
 </div>
 <!-- Configuração do Client ID para Vercel + GitHub -->
-<details class="pt-2 border-t border-slate-200 text-xs">
-<summary class="cursor-pointer font-black text-sky-700 select-none">⚙️ Configurar Google OAuth para Vercel + GitHub</summary>
-<div class="mt-2.5 space-y-2 text-[11px] font-semibold text-slate-600">
-<p>Para o login oficial do Gmail salvar direto no seu <strong>Google Drive</strong> quando hospedado na <strong>Vercel</strong>:</p>
-<ol class="list-decimal pl-4 space-y-1">
-<li>Acesse <strong>console.cloud.google.com</strong> ➔ crie um projeto ➔ ative a <strong>Google Drive API</strong>.</li>
-<li>Em <em>Credenciais ➔ ID do cliente OAuth 2.0 (Aplicativo da Web)</em>, adicione sua URL da Vercel (ex: <code>https://seu-site.vercel.app</code>) em <strong>Origens JavaScript autorizadas</strong>.</li>
-<li>Cole o <strong>Client ID</strong> abaixo (ou na constante <code>DEFAULT_GOOGLE_CLIENT_ID</code> do HTML antes de subir no GitHub):</li>
-</ol>
-<input id="googleClientIdInput" type="text" onchange="saveGoogleClientId()" placeholder="Ex: 1234567890-abc...apps.googleusercontent.com" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono" />
-<div class="pt-1">
-<label class="block text-[10px] font-bold text-slate-500 mb-1">Alternativa: E-mail local ou Webhook Google Apps Script (Opcional):</label>
-<div class="flex gap-1.5">
-<input id="googleEmailInput" type="email" placeholder="seuemail@gmail.com" class="flex-1 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs font-bold" />
-<button type="button" onclick="connectGoogleAccount()" class="px-3 py-1.5 rounded-xl bg-slate-800 text-white font-black text-[11px] shrink-0">Vincular</button>
-</div>
-<input id="googleWebhookUrlInput" type="url" onchange="saveGoogleWebhookUrl()" placeholder="https://script.google.com/macros/s/.../exec" class="w-full mt-1.5 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs font-bold" />
-</div>
-</div>
-</details>
+
 </div>
 <!-- Código Portátil de Sincronização Rápida (Funciona em qualquer aparelho!) -->
 <div class="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2.5">
@@ -1418,7 +1399,7 @@ Configurar
 </div>
 <script>
 const FR_FLAG_SVG = '<svg class="inline-block w-4 h-3 rounded-[2px] shadow-sm align-middle shrink-0" viewBox="0 0 3 2" aria-label="França"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>';
-const DEFAULT_GOOGLE_CLIENT_ID = ""; // Cole seu Google OAuth Client ID aqui antes de publicar na Vercel/GitHub (ou configure direto no modal do app)
+const DEFAULT_GOOGLE_CLIENT_ID = "574110924402-8a45k6itcleaub7m96sobr9nvh7fu0k8.apps.googleusercontent.com";
 const CURRICULUM_UNITS = [
 {
 id: "u1",
@@ -4295,19 +4276,24 @@ function connectGoogleAccount() {
 }
 
 function startRealGoogleOAuthSignIn() {
-  const clientId = appState.googleClientId || DEFAULT_GOOGLE_CLIENT_ID;
+  const clientId = (appState.googleClientId || "").trim() || DEFAULT_GOOGLE_CLIENT_ID;
   if (!clientId) {
     showToast("Configure seu Google OAuth Client ID na seção abaixo primeiro.", "⚙️");
     return;
   }
   if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
-    showToast("Biblioteca Google OAuth ainda carregando. Tente em 2 segundos.", "⏳");
+    showToast("Biblioteca Google OAuth ainda carregando. Tente novamente em 2 segundos.", "⏳");
     return;
   }
   googleTokenClient = window.google.accounts.oauth2.initTokenClient({
     client_id: clientId,
     scope: "https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
     callback: async (resp) => {
+      if (resp && resp.error) {
+        console.warn("Google OAuth error:", resp);
+        showToast("Login cancelado ou domínio não autorizado no Google Cloud.", "⚠️");
+        return;
+      }
       if (resp && resp.access_token) {
         googleAccessToken = resp.access_token;
         try {
@@ -4320,17 +4306,34 @@ function startRealGoogleOAuthSignIn() {
           appState.googleLastSync = new Date().toLocaleString("pt-BR");
           saveAppState();
           updateGoogleSyncUI();
-          showToast("Conectado com Google Drive!", "☁️");
+          showToast(`Conectado: ${info.email || "Google"}! Sincronizando...`, "☁️");
+
+          // Verifica automaticamente se já existe backup no Google Drive; se existir restaura, senão cria o primeiro backup
+          const searchRes = await fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='vagnilds_francais_backup.json'&fields=files(id)", {
+            headers: { Authorization: "Bearer " + googleAccessToken }
+          });
+          const searchJson = await searchRes.json();
+          if (searchJson.files && searchJson.files.length > 0) {
+            await pullFromGoogleCloud();
+          } else {
+            await syncNowWithGoogleCloud();
+          }
         } catch (e) {
+          console.warn("Userinfo/sync error:", e);
           showToast("Conectado ao Google!", "☁️");
         }
       }
     }
   });
-  googleTokenClient.requestAccessToken();
+  // Abre diretamente o seletor de contas Gmail já logadas no navegador
+  googleTokenClient.requestAccessToken({ prompt: "select_account" });
 }
 
 async function syncNowWithGoogleCloud() {
+  if (!googleAccessToken && ((appState.googleClientId || "").trim() || DEFAULT_GOOGLE_CLIENT_ID) && !appState.googleWebhookUrl) {
+    startRealGoogleOAuthSignIn();
+    return;
+  }
   if (googleAccessToken) {
     try {
       const searchRes = await fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='vagnilds_francais_backup.json'&fields=files(id)", {
@@ -4387,6 +4390,10 @@ async function syncNowWithGoogleCloud() {
 }
 
 async function pullFromGoogleCloud() {
+  if (!googleAccessToken && ((appState.googleClientId || "").trim() || DEFAULT_GOOGLE_CLIENT_ID)) {
+    startRealGoogleOAuthSignIn();
+    return;
+  }
   if (googleAccessToken) {
     try {
       const searchRes = await fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='vagnilds_francais_backup.json'&fields=files(id)", {
