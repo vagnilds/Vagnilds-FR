@@ -940,9 +940,39 @@ Verificar
 <div id="modalUsersList" class="space-y-2 max-h-60 overflow-y-auto custom-scroll pr-1">
 <!-- Populated by JS -->
 </div>
-<!-- Create New User Form -->
+<!-- Create New User Form (Login opcional com Gmail individual ou somente local no aparelho) -->
 <div class="pt-3 border-t-2 border-slate-100 space-y-3">
+<div class="flex items-center justify-between gap-2">
 <h4 class="text-xs font-black uppercase tracking-wider text-slate-500">Adicionar Novo Estudante</h4>
+<span id="newUserGmailStatusBadge" class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-black text-[10px]">📱 Local ou ☁️ Gmail</span>
+</div>
+
+<!-- Opção de vincular o Gmail próprio deste usuário -->
+<div id="newUserGmailAuthBox" class="p-3 rounded-2xl bg-sky-50 border-2 border-sky-200 space-y-2">
+<div id="newUserGmailLoggedOut" class="space-y-2">
+<p class="text-[11px] font-bold text-sky-900">Vincule o <strong>Gmail próprio</strong> deste estudante para sincronizar na nuvem, ou preencha abaixo para salvar <strong>somente neste aparelho</strong>:</p>
+<button type="button" onclick="signInGmailForNewUser()" class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs flex items-center justify-center gap-2 shadow">
+<span class="w-5 h-5 rounded bg-white text-blue-600 flex items-center justify-center font-black text-xs">G</span>
+<span>Conectar Gmail deste Usuário (Sincronizar Nuvem)</span>
+</button>
+</div>
+<div id="newUserGmailLoggedIn" class="hidden flex items-center justify-between gap-2">
+<div class="flex items-center gap-2 min-w-0">
+<img id="newUserGmailAvatarImg" src="" alt="" class="hidden w-8 h-8 rounded-full border-2 border-emerald-400 shrink-0" />
+<div class="min-w-0">
+<p class="text-[10px] font-black uppercase text-emerald-700">☁️ Gmail Vinculado a este Perfil</p>
+<p id="newUserGmailEmailLabel" class="text-xs font-black text-slate-900 truncate"></p>
+</div>
+</div>
+<div class="flex items-center gap-1 shrink-0">
+<button type="button" onclick="signInGmailForNewUser()" class="px-2 py-1 rounded-lg bg-white border border-sky-300 text-sky-700 font-black text-[10px]">Trocar</button>
+<button type="button" onclick="clearPendingNewUserGmail()" class="px-2 py-1 rounded-lg bg-white border border-slate-300 text-slate-600 font-black text-[10px]" title="Remover vínculo Gmail">✕</button>
+</div>
+</div>
+</div>
+
+<!-- Dados do Perfil (sempre liberados, com ou sem Gmail) -->
+<div id="newUserFieldsWrapper" class="space-y-3">
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
 <div class="sm:col-span-2">
 <label class="block text-[11px] font-bold text-slate-500 mb-1">Nome do Estudante</label>
@@ -972,9 +1002,10 @@ Verificar
 <input id="newUserPasswordInput" type="text" placeholder="Ex: 1234 ou deixe em branco" class="w-full px-3.5 py-2 rounded-xl border-2 border-slate-200 font-bold text-sm focus:outline-none focus:border-emerald-500" />
 </div>
 </div>
-<button onclick="createNewUserProfile()" class="w-full py-3 rounded-2xl btn-3d-green text-white font-black text-sm">
-+ Criar Perfil e Começar a Pontuar
+<button id="createNewUserSubmitBtn" type="button" onclick="createNewUserProfile()" class="w-full py-3 rounded-2xl btn-3d-green text-white font-black text-sm">
++ Criar Perfil (Somente neste Aparelho)
 </button>
+</div>
 </div>
 </div>
 </div>
@@ -1314,8 +1345,8 @@ Configurar
 <div class="flex items-center gap-3">
 <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black text-xl shadow">G</div>
 <div>
-<h3 class="text-lg font-black text-slate-900">Entrar com o Google & Sincronizar</h3>
-<p class="text-xs font-bold text-slate-500">Sincronização real via Google Drive (pronto para Vercel + GitHub)</p>
+<h3 class="text-lg font-black text-slate-900">Sincronização Individual por Gmail</h3>
+<p id="googleModalActiveUserSubtitle" class="text-xs font-bold text-slate-500">Vincule o Gmail próprio do estudante ativo</p>
 </div>
 </div>
 <button type="button" onclick="closeGoogleSyncModal()" class="p-2 rounded-xl bg-slate-100 text-slate-600 font-black">✕</button>
@@ -1839,6 +1870,7 @@ const DEFAULT_USERS = [
 {
 id: "u_vagner",
 name: "Vagner",
+gmail: "",
 avatar: "🦅",
 password: "",
 evolutionLevel: 1,
@@ -1858,6 +1890,7 @@ lastActive: "Pronto para começar"
 {
 id: "u_maria",
 name: "Maria",
+gmail: "",
 avatar: "🦉",
 password: "",
 evolutionLevel: 1,
@@ -1931,8 +1964,9 @@ console.warn("Storage fallback:", err);
 function saveAppState() {
 try {
 localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-if (appState.googleEmail) {
-localStorage.setItem("vagnilds_google_backup_" + appState.googleEmail, JSON.stringify(appState));
+const actUser = getActiveUser();
+if (actUser && actUser.gmail) {
+localStorage.setItem("vagnilds_user_gmail_backup_" + actUser.gmail, JSON.stringify(actUser));
 }
 } catch (err) {
 console.warn("Storage write fallback:", err);
@@ -2329,7 +2363,10 @@ function showToast(text, icon) {
   }, 3000);
 }
 
-/* ==================== VOZ FRANCESA (TTS) ==================== */
+/* ==================== VOZ FRANCESA NEURAL HD (TODOS OS DISPOSITIVOS) ==================== */
+const neuralAudioCache = {};
+let activeNeuralAudioEl = null;
+
 function refreshAvailableVoices() {
   if (!("speechSynthesis" in window)) return;
   const voices = window.speechSynthesis.getVoices() || [];
@@ -2345,18 +2382,20 @@ function populateVoiceSelectOptions() {
   if (!selects.length) return;
 
   const baseOptions = [
-    { val: "cloud_lea", label: "👩 Léa Neural HD (Feminina)" },
-    { val: "cloud_celine", label: "👩 Céline HD (Feminina Suave)" },
-    { val: "cloud_henri", label: "👨 Henri Neural HD (Masculina)" },
-    { val: "cloud_lucas", label: "👨 Lucas Neural HD (Masculina Grave)" },
-    { val: "cloud_mathieu", label: "👨 Mathieu HD (Masculina Clássica)" }
+    { val: "cloud_lea", label: "👩 Denise / Léa Neural HD (Feminina)" },
+    { val: "cloud_celine", label: "👩 Éloïse / Céline Neural HD (Feminina Suave)" },
+    { val: "cloud_henri", label: "👨 Henri Neural HD (Masculina Natural)" },
+    { val: "cloud_lucas", label: "👨 Rémy / Lucas Neural HD (Masculina Grave)" },
+    { val: "cloud_mathieu", label: "👨 Antoine / Mathieu Neural HD (Masculina)" }
   ];
 
   selects.forEach(sel => {
     const current = appState.selectedVoiceName || "cloud_lea";
-    let html = baseOptions.map(o => `<option value="${o.val}">${o.label}</option>`).join("");
+    let html = `<optgroup label="✨ Vozes Neurais HD (PC, Android & iPhone)">` +
+      baseOptions.map(o => `<option value="${o.val}">${o.label}</option>`).join("") +
+      `</optgroup>`;
     if (cachedSpeechVoices.length > 0) {
-      html += `<optgroup label="Vozes do Dispositivo (fr-FR / fr-CA)">`;
+      html += `<optgroup label="Vozes Locais do Navegador (Offline)">`;
       cachedSpeechVoices.forEach(v => {
         const isMale = MALE_FR_REGEX.test(v.name);
         const icon = isMale ? "👨" : "👩";
@@ -2392,9 +2431,7 @@ function updateVoiceGenderButtonsUI() {
   });
   const hint = document.getElementById("settingsVoiceStatusHint");
   if (hint) {
-    hint.textContent = cachedSpeechVoices.length > 0
-      ? `${cachedSpeechVoices.length} voz(es) francesa(s) detectada(s) no navegador`
-      : "Usando síntese padrão fr-FR do navegador";
+    hint.textContent = "✨ Voz Neural HD ativa (PC, Android e iPhone sem voz robótica)";
   }
 }
 
@@ -2411,22 +2448,30 @@ function pickBestFrenchVoice() {
   const scored = voices.map(v => {
     let score = 0;
     if (/fr[-_]FR/i.test(v.lang)) score += 20;
-    if (/natural|neural|google|premium|enhanced|online/i.test(v.name)) score += 30;
-    if (wantMale && MALE_FR_REGEX.test(v.name)) score += 40;
-    if (!wantMale && FEMALE_FR_REGEX.test(v.name)) score += 40;
+    if (/natural|neural|google|premium|enhanced|online|microsoft/i.test(v.name)) score += 35;
+    if (wantMale && MALE_FR_REGEX.test(v.name)) score += 45;
+    if (!wantMale && FEMALE_FR_REGEX.test(v.name)) score += 45;
     if (!wantMale && !MALE_FR_REGEX.test(v.name)) score += 10;
     return { v, score };
   }).sort((a, b) => b.score - a.score);
   return scored[0] ? scored[0].v : voices[0];
 }
 
-function speakFrench(text, rate) {
-  if (!text) return;
-  const cleanText = String(text).replace(/\(.*?\)/g, "").replace(/\s+/g, " ").trim();
-  if (!("speechSynthesis" in window)) {
-    showToast("Seu navegador não suporta leitura em voz alta.", "⚠️");
-    return;
+function stopAllFrenchSpeech() {
+  if (activeNeuralAudioEl) {
+    try {
+      activeNeuralAudioEl.pause();
+      activeNeuralAudioEl.currentTime = 0;
+    } catch (e) {}
+    activeNeuralAudioEl = null;
   }
+  if ("speechSynthesis" in window) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+  }
+}
+
+function speakWithBrowserFallback(cleanText, rate) {
+  if (!("speechSynthesis" in window)) return;
   try {
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(cleanText);
@@ -2443,7 +2488,49 @@ function speakFrench(text, rate) {
     if (voice) utter.voice = voice;
     window.speechSynthesis.speak(utter);
   } catch (e) {
-    console.warn("TTS error:", e);
+    console.warn("Browser TTS fallback error:", e);
+  }
+}
+
+async function speakFrench(text, rate) {
+  if (!text) return;
+  const cleanText = String(text).replace(/\(.*?\)/g, "").replace(/\s+/g, " ").trim();
+  if (!cleanText) return;
+
+  stopAllFrenchSpeech();
+
+  const sel = appState.selectedVoiceName || (appState.voiceGender === "male" ? "cloud_henri" : "cloud_lea");
+  // Se o usuário escolheu explicitamente uma voz local do dispositivo (sys:...)
+  if (sel.startsWith("sys:")) {
+    speakWithBrowserFallback(cleanText, rate);
+    return;
+  }
+
+  const normalizedRate = typeof rate === "number" ? rate : 0.95;
+  const voiceKey = sel.startsWith("cloud_") ? sel : (appState.voiceGender === "male" ? "cloud_henri" : "cloud_lea");
+  const cacheKey = `${voiceKey}|${normalizedRate.toFixed(2)}|${cleanText}`;
+
+  try {
+    let audioUrl = neuralAudioCache[cacheKey];
+    if (!audioUrl) {
+      const apiUrl = `/api/tts?voice=${encodeURIComponent(voiceKey)}&rate=${encodeURIComponent(normalizedRate)}&text=${encodeURIComponent(cleanText)}`;
+      const resp = await fetch(apiUrl);
+      if (!resp.ok) throw new Error("Neural TTS endpoint status " + resp.status);
+      const blob = await resp.blob();
+      if (!blob || blob.size < 200) throw new Error("Empty neural audio blob");
+      audioUrl = URL.createObjectURL(blob);
+      neuralAudioCache[cacheKey] = audioUrl;
+    }
+
+    const audio = new Audio(audioUrl);
+    activeNeuralAudioEl = audio;
+    if (normalizedRate < 0.80) {
+      audio.playbackRate = 0.85;
+    }
+    await audio.play();
+  } catch (err) {
+    // Caso esteja offline ou rodando localmente sem servidor Vercel, usa a melhor voz do navegador
+    speakWithBrowserFallback(cleanText, normalizedRate);
   }
 }
 
@@ -2456,7 +2543,7 @@ function setFrenchVoiceGender(gender) {
   }
   saveAppState();
   populateVoiceSelectOptions();
-  showToast(appState.voiceGender === "male" ? "Voz masculina selecionada" : "Voz feminina selecionada", "🗣️");
+  showToast(appState.voiceGender === "male" ? "Voz Neural Masculina ativada" : "Voz Neural Feminina ativada", "🗣️");
 }
 
 function handleVoiceSelectionChange() {
@@ -2490,7 +2577,7 @@ function handleSettingsVoiceSelectChange() {
 }
 
 function testSelectedFrenchVoice() {
-  speakFrench("Bonjour ! Bienvenue sur Français avec Vagnilds. On va parler français couramment !", 0.95);
+  speakFrench("Bonjour ! Bienvenue sur Français avec Vagnilds. Cette voix neurale est naturelle sur PC et mobile !", 0.95);
 }
 
 function speakCustomInput(rate) {
@@ -3353,6 +3440,9 @@ function finishLessonSession() {
   }
 
   saveAppState();
+  if (user.gmail && userGoogleTokens[user.id]) {
+    syncNowWithGoogleCloud();
+  }
   playSoundEffect("win");
 
   document.getElementById("lessonProgressBar").style.width = "100%";
@@ -3968,7 +4058,7 @@ function renderRankingView() {
             <span class="text-lg">${u.avatar || "🦅"}</span>
             <div>
               <p class="font-black text-slate-900">${escapeHtml(u.name)} ${isActive ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-600 text-white ml-1">VOCÊ</span>' : ''}</p>
-              <p class="text-[10px] text-slate-400 font-semibold">${escapeHtml(u.lastActive || "")}</p>
+              <p class="text-[10px] text-slate-400 font-semibold">${u.gmail ? "☁️ " + escapeHtml(u.gmail) : "📱 Local"} • ${escapeHtml(u.lastActive || "")}</p>
             </div>
           </div>
         </td>
@@ -4020,12 +4110,105 @@ function renderRankingView() {
 }
 
 /* ==================== TROCA / CRIAÇÃO DE USUÁRIO ==================== */
+let pendingNewUserGmail = null;
+const userGoogleTokens = {}; // Armazena o access_token do Google Drive por user.id
+
+function clearPendingNewUserGmail() {
+  pendingNewUserGmail = null;
+  updateNewUserGmailUI();
+}
+
+function updateNewUserGmailUI() {
+  const loggedOut = document.getElementById("newUserGmailLoggedOut");
+  const loggedIn = document.getElementById("newUserGmailLoggedIn");
+  const emailLbl = document.getElementById("newUserGmailEmailLabel");
+  const avatarImg = document.getElementById("newUserGmailAvatarImg");
+  const badge = document.getElementById("newUserGmailStatusBadge");
+  const submitBtn = document.getElementById("createNewUserSubmitBtn");
+  const nameInput = document.getElementById("newUserNameInput");
+
+  if (pendingNewUserGmail && pendingNewUserGmail.email) {
+    if (loggedOut) loggedOut.classList.add("hidden");
+    if (loggedIn) loggedIn.classList.remove("hidden");
+    if (emailLbl) emailLbl.textContent = pendingNewUserGmail.email;
+    if (avatarImg) {
+      if (pendingNewUserGmail.picture) {
+        avatarImg.src = pendingNewUserGmail.picture;
+        avatarImg.classList.remove("hidden");
+      } else {
+        avatarImg.classList.add("hidden");
+      }
+    }
+    if (badge) {
+      badge.textContent = "☁️ Gmail Vinculado";
+      badge.className = "px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-black text-[10px]";
+    }
+    if (submitBtn) submitBtn.textContent = "+ Criar Perfil e Sincronizar com Gmail";
+    if (nameInput && !nameInput.value.trim() && pendingNewUserGmail.name) {
+      nameInput.value = pendingNewUserGmail.name;
+    }
+  } else {
+    if (loggedOut) loggedOut.classList.remove("hidden");
+    if (loggedIn) loggedIn.classList.add("hidden");
+    if (badge) {
+      badge.textContent = "📱 Local ou ☁️ Gmail";
+      badge.className = "px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-black text-[10px]";
+    }
+    if (submitBtn) submitBtn.textContent = "+ Criar Perfil (Somente neste Aparelho)";
+  }
+}
+
+function signInGmailForNewUser() {
+  const clientId = (appState.googleClientId || "").trim() || DEFAULT_GOOGLE_CLIENT_ID;
+  if (!clientId) {
+    showToast("Client ID do Google não configurado.", "⚠️");
+    return;
+  }
+  if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+    showToast("Biblioteca do Google ainda carregando. Tente em 2 segundos.", "⏳");
+    return;
+  }
+  const client = window.google.accounts.oauth2.initTokenClient({
+    client_id: clientId,
+    scope: "https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
+    callback: async (resp) => {
+      if (resp && resp.error) {
+        showToast("Login com Gmail cancelado ou não autorizado.", "⚠️");
+        return;
+      }
+      if (resp && resp.access_token) {
+        try {
+          const r = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: { Authorization: "Bearer " + resp.access_token }
+          });
+          const info = await r.json();
+          const email = (info.email || "").trim().toLowerCase();
+          pendingNewUserGmail = {
+            email,
+            name: info.given_name || info.name || "",
+            picture: info.picture || "",
+            token: resp.access_token
+          };
+          updateNewUserGmailUI();
+          showToast(`Gmail selecionado: ${email}`, "✅");
+        } catch (e) {
+          showToast("Erro ao obter dados da conta Gmail.", "❌");
+        }
+      }
+    }
+  });
+  client.requestAccessToken({ prompt: "select_account" });
+}
+
 function openUserSwitcherModal() {
   const modal = document.getElementById("userSwitcherModal");
   const list = document.getElementById("modalUsersList");
   if (!modal || !list) return;
   list.innerHTML = appState.users.map(u => {
     const isAct = u.id === appState.activeUserId;
+    const syncTag = u.gmail
+      ? `<span class="text-emerald-700 font-extrabold">☁️ ${escapeHtml(u.gmail)}</span>`
+      : `<span class="text-slate-400 font-bold">📱 Somente neste aparelho</span>`;
     return `
     <div class="flex items-center justify-between p-3 rounded-2xl border-2 ${isAct ? 'border-emerald-400 bg-emerald-50' : 'border-slate-200 bg-slate-50'}">
       <div class="flex items-center gap-2.5 min-w-0">
@@ -4033,13 +4216,15 @@ function openUserSwitcherModal() {
         <div class="min-w-0">
           <p class="font-black text-sm text-slate-900 truncate">${escapeHtml(u.name)} ${u.password ? "🔒" : ""}</p>
           <p class="text-[11px] font-bold text-slate-500">⚡ ${u.xp || 0} XP • ${getCefrForUser(u)}</p>
+          <p class="text-[10px] truncate mt-0.5">${syncTag}</p>
         </div>
       </div>
-      <button onclick="requestSwitchToUser('${u.id}')" class="px-3 py-1.5 rounded-xl font-black text-xs ${isAct ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-300 text-slate-700 hover:border-sky-400'}">
+      <button onclick="requestSwitchToUser('${u.id}')" class="px-3 py-1.5 rounded-xl font-black text-xs shrink-0 ${isAct ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-300 text-slate-700 hover:border-sky-400'}">
         ${isAct ? "Ativo" : "Entrar"}
       </button>
     </div>`;
   }).join("");
+  updateNewUserGmailUI();
   modal.classList.remove("hidden");
 }
 
@@ -4089,22 +4274,53 @@ function completeUserSwitch(uid) {
   if (appState.activeTab === "learn") renderLearnPath();
   else if (appState.activeTab === "vocab") renderVocabularyView();
   else if (appState.activeTab === "ranking") renderRankingView();
-  showToast(`Perfil ativo: ${getActiveUser().name}`, getActiveUser().avatar || "👤");
+  const act = getActiveUser();
+  showToast(
+    act.gmail ? `Perfil: ${act.name} (☁️ ${act.gmail})` : `Perfil: ${act.name} (📱 Local)`,
+    act.avatar || "👤"
+  );
 }
 
-function createNewUserProfile() {
+async function createNewUserProfile() {
   const nameEl = document.getElementById("newUserNameInput");
   const avatarEl = document.getElementById("newUserAvatarSelect");
   const goalEl = document.getElementById("newUserGoalInput");
   const passEl = document.getElementById("newUserPasswordInput");
-  const name = (nameEl && nameEl.value || "").trim();
+
+  const hasGmail = !!(pendingNewUserGmail && pendingNewUserGmail.email);
+  const name = (nameEl && nameEl.value || "").trim() || (hasGmail ? pendingNewUserGmail.name : "");
   if (!name) {
     showToast("Digite o nome do estudante!", "⚠️");
     return;
   }
+
+  const gmailAddr = hasGmail ? pendingNewUserGmail.email : "";
+  const gmailPic = hasGmail ? (pendingNewUserGmail.picture || "") : "";
+  const gmailToken = hasGmail ? (pendingNewUserGmail.token || "") : "";
+
+  // Verifica se já existe um perfil com esse mesmo Gmail neste aparelho
+  if (gmailAddr) {
+    const existing = appState.users.find(u => (u.gmail || "").toLowerCase() === gmailAddr.toLowerCase());
+    if (existing) {
+      if (gmailToken) userGoogleTokens[existing.id] = gmailToken;
+      if (gmailPic) existing.googleAvatar = gmailPic;
+      pendingNewUserGmail = null;
+      if (nameEl) nameEl.value = "";
+      if (goalEl) goalEl.value = "";
+      if (passEl) passEl.value = "";
+      completeUserSwitch(existing.id);
+      showToast(`Perfil existente de ${existing.name} carregado!`, "☁️");
+      return;
+    }
+  }
+
+  const newUserId = "u_" + Date.now();
   const newUser = {
-    id: "u_" + Date.now(),
+    id: newUserId,
     name,
+    gmail: gmailAddr,
+    googleAvatar: gmailPic,
+    googleLastSync: "",
     avatar: (avatarEl && avatarEl.value) || "🦅",
     password: (passEl && passEl.value || "").trim(),
     evolutionLevel: 1,
@@ -4119,13 +4335,26 @@ function createNewUserProfile() {
     unitProgress: {},
     masteredVocab: [],
     mistakes: [],
-    lastActive: "Novo estudante"
+    lastActive: gmailAddr ? "Sincronizado via Gmail" : "Salvo neste aparelho"
   };
+
+  if (gmailToken) {
+    userGoogleTokens[newUserId] = gmailToken;
+  }
+
   appState.users.push(newUser);
+  pendingNewUserGmail = null;
   if (nameEl) nameEl.value = "";
   if (goalEl) goalEl.value = "";
   if (passEl) passEl.value = "";
   completeUserSwitch(newUser.id);
+
+  if (gmailAddr) {
+    // Verifica se já há progresso salvo no Google Drive deste Gmail; senão cria o backup inicial
+    await checkOrInitDriveForUser(newUser);
+  } else {
+    showToast(`Perfil ${name} criado (salvo somente neste aparelho).`, "📱");
+  }
 }
 
 /* ==================== CONFIGURAÇÕES, TEMA & SONS ==================== */
@@ -4195,20 +4424,17 @@ function renderSettingsModalState() {
     rBtn.className = "px-4 py-2 rounded-xl font-black text-xs " + (appState.soundEnabled ? "bg-emerald-600 text-white" : "bg-slate-400 text-white");
   }
   const gStat = document.getElementById("settingsGoogleStatusText");
+  const actUser = getActiveUser();
   if (gStat) {
-    gStat.textContent = appState.googleEmail ? `Conectado: ${appState.googleEmail}` : "Salve seu progresso na sua conta Google";
+    gStat.textContent = actUser.gmail
+      ? `${actUser.name}: vinculado a ${actUser.gmail}`
+      : `${actUser.name}: salvo somente neste aparelho`;
   }
 }
 
-/* ==================== GOOGLE SYNC & CÓDIGO PORTÁTIL ==================== */
+/* ==================== GOOGLE SYNC INDIVIDUAL POR USUÁRIO ==================== */
 function openGoogleSyncModal() {
   updateGoogleSyncUI();
-  const cInp = document.getElementById("googleClientIdInput");
-  if (cInp) cInp.value = appState.googleClientId || DEFAULT_GOOGLE_CLIENT_ID || "";
-  const eInp = document.getElementById("googleEmailInput");
-  if (eInp) eInp.value = appState.googleEmail || "";
-  const wInp = document.getElementById("googleWebhookUrlInput");
-  if (wInp) wInp.value = appState.googleWebhookUrl || "";
   document.getElementById("googleSyncModal").classList.remove("hidden");
 }
 
@@ -4217,7 +4443,8 @@ function closeGoogleSyncModal() {
 }
 
 function updateGoogleSyncUI() {
-  const email = appState.googleEmail;
+  const user = getActiveUser();
+  const email = user.gmail || "";
   const titleEl = document.getElementById("sidebarGoogleBtnTitle");
   const subEl = document.getElementById("sidebarGoogleBtnSub");
   const dotEl = document.getElementById("sidebarGoogleStatusDot");
@@ -4225,19 +4452,37 @@ function updateGoogleSyncUI() {
   const dispSync = document.getElementById("googleLastSyncDisplay");
   const pill = document.getElementById("googleSyncBadgePill");
   const img = document.getElementById("googleUserAvatarImg");
+  const modalSub = document.getElementById("googleModalActiveUserSubtitle");
+  const oauthBtnLbl = document.getElementById("googleOAuthBtnLabel");
 
-  if (titleEl) titleEl.textContent = email ? email : "Entrar com o Google";
-  if (subEl) subEl.textContent = appState.googleLastSync ? `Sync: ${appState.googleLastSync}` : "Sincronizar meu progresso";
+  if (modalSub) {
+    modalSub.textContent = `Estudante ativo: ${user.name} (${email ? "sincronizando com " + email : "modo local neste aparelho"})`;
+  }
+  if (oauthBtnLbl) {
+    oauthBtnLbl.textContent = email
+      ? `Trocar / Reconectar Gmail de ${user.name}`
+      : `Conectar Gmail próprio de ${user.name}`;
+  }
+  if (titleEl) titleEl.textContent = email ? email : `Conectar Gmail (${user.name})`;
+  if (subEl) {
+    subEl.textContent = email
+      ? (user.googleLastSync ? `Sync: ${user.googleLastSync}` : `Nuvem de ${user.name}`)
+      : "Salvo somente neste aparelho";
+  }
   if (dotEl) dotEl.className = "w-2.5 h-2.5 rounded-full shrink-0 " + (email ? "bg-emerald-500" : "bg-amber-400");
-  if (dispEmail) dispEmail.textContent = email || "Nenhuma conta conectada";
-  if (dispSync) dispSync.textContent = appState.googleLastSync ? `Última sincronização: ${appState.googleLastSync}` : "Conecte seu Gmail abaixo para sincronizar na nuvem";
+  if (dispEmail) dispEmail.textContent = email || `${user.name} — Sem Gmail vinculado (Local)`;
+  if (dispSync) {
+    dispSync.textContent = email
+      ? (user.googleLastSync ? `Última sincronização de ${user.name}: ${user.googleLastSync}` : `Conectado ao Gmail próprio de ${user.name}`)
+      : `O progresso de ${user.name} está salvo apenas neste aparelho. Conecte o Gmail próprio de ${user.name} para salvar na nuvem.`;
+  }
   if (pill) {
-    pill.textContent = email ? "Conectado" : "Offline";
+    pill.textContent = email ? "Nuvem Gmail" : "Só Aparelho";
     pill.className = "px-2.5 py-1 rounded-full font-black text-[10px] uppercase shrink-0 " + (email ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800");
   }
   if (img) {
-    if (appState.googleAvatar) {
-      img.src = appState.googleAvatar;
+    if (user.googleAvatar) {
+      img.src = user.googleAvatar;
       img.classList.remove("hidden");
     } else {
       img.classList.add("hidden");
@@ -4245,46 +4490,41 @@ function updateGoogleSyncUI() {
   }
 }
 
-function saveGoogleClientId() {
-  const inp = document.getElementById("googleClientIdInput");
-  if (!inp) return;
-  appState.googleClientId = inp.value.trim();
-  saveAppState();
-  showToast("Google Client ID salvo!", "⚙️");
+function getDriveBackupFilenameForUser(user) {
+  const safeEmail = String(user.gmail || "local").toLowerCase().replace(/[^a-z0-9@._-]/g, "_");
+  return `vagnilds_francais_${safeEmail}.json`;
 }
 
-function saveGoogleWebhookUrl() {
-  const inp = document.getElementById("googleWebhookUrlInput");
-  if (!inp) return;
-  appState.googleWebhookUrl = inp.value.trim();
-  saveAppState();
-  showToast("Webhook URL salvo!", "⚙️");
-}
-
-function connectGoogleAccount() {
-  const inp = document.getElementById("googleEmailInput");
-  const email = (inp && inp.value || "").trim();
-  if (!email || !email.includes("@")) {
-    showToast("Digite um e-mail válido!", "⚠️");
-    return;
+async function checkOrInitDriveForUser(user) {
+  const token = userGoogleTokens[user.id];
+  if (!token || !user.gmail) return;
+  const fileName = getDriveBackupFilenameForUser(user);
+  try {
+    const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${encodeURIComponent(fileName)}'&fields=files(id)`, {
+      headers: { Authorization: "Bearer " + token }
+    });
+    const searchJson = await searchRes.json();
+    if (searchJson.files && searchJson.files.length > 0) {
+      await pullFromGoogleCloud();
+    } else {
+      await syncNowWithGoogleCloud();
+    }
+  } catch (e) {
+    console.warn("Drive check/init error:", e);
   }
-  appState.googleEmail = email;
-  appState.googleLastSync = new Date().toLocaleString("pt-BR");
-  saveAppState();
-  updateGoogleSyncUI();
-  showToast(`Conta ${email} vinculada!`, "✅");
 }
 
 function startRealGoogleOAuthSignIn() {
   const clientId = (appState.googleClientId || "").trim() || DEFAULT_GOOGLE_CLIENT_ID;
   if (!clientId) {
-    showToast("Configure seu Google OAuth Client ID na seção abaixo primeiro.", "⚙️");
+    showToast("Google OAuth Client ID não configurado.", "⚙️");
     return;
   }
   if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
     showToast("Biblioteca Google OAuth ainda carregando. Tente novamente em 2 segundos.", "⏳");
     return;
   }
+  const targetUser = getActiveUser();
   googleTokenClient = window.google.accounts.oauth2.initTokenClient({
     client_id: clientId,
     scope: "https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
@@ -4295,29 +4535,35 @@ function startRealGoogleOAuthSignIn() {
         return;
       }
       if (resp && resp.access_token) {
-        googleAccessToken = resp.access_token;
+        userGoogleTokens[targetUser.id] = resp.access_token;
         try {
           const r = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-            headers: { Authorization: "Bearer " + googleAccessToken }
+            headers: { Authorization: "Bearer " + resp.access_token }
           });
           const info = await r.json();
-          if (info.email) appState.googleEmail = info.email;
-          if (info.picture) appState.googleAvatar = info.picture;
-          appState.googleLastSync = new Date().toLocaleString("pt-BR");
-          saveAppState();
-          updateGoogleSyncUI();
-          showToast(`Conectado: ${info.email || "Google"}! Sincronizando...`, "☁️");
+          const email = (info.email || "").trim().toLowerCase();
 
-          // Verifica automaticamente se já existe backup no Google Drive; se existir restaura, senão cria o primeiro backup
-          const searchRes = await fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='vagnilds_francais_backup.json'&fields=files(id)", {
-            headers: { Authorization: "Bearer " + googleAccessToken }
-          });
-          const searchJson = await searchRes.json();
-          if (searchJson.files && searchJson.files.length > 0) {
-            await pullFromGoogleCloud();
-          } else {
-            await syncNowWithGoogleCloud();
+          // Verifica se outro perfil local já usa esse Gmail
+          const otherWithSameGmail = appState.users.find(
+            u => u.id !== targetUser.id && (u.gmail || "").toLowerCase() === email
+          );
+          if (otherWithSameGmail) {
+            userGoogleTokens[otherWithSameGmail.id] = resp.access_token;
+            if (info.picture) otherWithSameGmail.googleAvatar = info.picture;
+            completeUserSwitch(otherWithSameGmail.id);
+            showToast(`Alternado para ${otherWithSameGmail.name} (${email})!`, "☁️");
+            await checkOrInitDriveForUser(otherWithSameGmail);
+            return;
           }
+
+          targetUser.gmail = email;
+          if (info.picture) targetUser.googleAvatar = info.picture;
+          targetUser.googleLastSync = new Date().toLocaleString("pt-BR");
+          saveAppState();
+          updateAllCountersAndHeaders();
+          showToast(`${targetUser.name} conectado a ${email}!`, "☁️");
+
+          await checkOrInitDriveForUser(targetUser);
         } catch (e) {
           console.warn("Userinfo/sync error:", e);
           showToast("Conectado ao Google!", "☁️");
@@ -4325,126 +4571,124 @@ function startRealGoogleOAuthSignIn() {
       }
     }
   });
-  // Abre diretamente o seletor de contas Gmail já logadas no navegador
+  // Abre diretamente o seletor de contas Gmail cadastradas no navegador
   googleTokenClient.requestAccessToken({ prompt: "select_account" });
 }
 
 async function syncNowWithGoogleCloud() {
-  if (!googleAccessToken && ((appState.googleClientId || "").trim() || DEFAULT_GOOGLE_CLIENT_ID) && !appState.googleWebhookUrl) {
+  const user = getActiveUser();
+  if (!user.gmail) {
+    showToast(`${user.name} não tem Gmail vinculado. Faça login com o Gmail de ${user.name} para salvar na nuvem.`, "📱");
     startRealGoogleOAuthSignIn();
     return;
   }
-  if (googleAccessToken) {
-    try {
-      const searchRes = await fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='vagnilds_francais_backup.json'&fields=files(id)", {
-        headers: { Authorization: "Bearer " + googleAccessToken }
-      });
-      const searchJson = await searchRes.json();
-      const fileId = searchJson.files && searchJson.files[0] ? searchJson.files[0].id : null;
-      const bodyData = JSON.stringify(appState);
+  const token = userGoogleTokens[user.id];
+  if (!token) {
+    startRealGoogleOAuthSignIn();
+    return;
+  }
+  const fileName = getDriveBackupFilenameForUser(user);
+  const payload = JSON.stringify({
+    version: 2,
+    syncedAt: new Date().toISOString(),
+    gmail: user.gmail,
+    userProfile: user
+  });
+  try {
+    const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${encodeURIComponent(fileName)}'&fields=files(id)`, {
+      headers: { Authorization: "Bearer " + token }
+    });
+    const searchJson = await searchRes.json();
+    const fileId = searchJson.files && searchJson.files[0] ? searchJson.files[0].id : null;
 
-      if (fileId) {
-        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
-          method: "PATCH",
-          headers: { Authorization: "Bearer " + googleAccessToken, "Content-Type": "application/json" },
-          body: bodyData
-        });
-      } else {
-        const meta = { name: "vagnilds_francais_backup.json", parents: ["appDataFolder"] };
-        const form = new FormData();
-        form.append("metadata", new Blob([JSON.stringify(meta)], { type: "application/json" }));
-        form.append("file", new Blob([bodyData], { type: "application/json" }));
-        await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
-          method: "POST",
-          headers: { Authorization: "Bearer " + googleAccessToken },
-          body: form
-        });
-      }
-      appState.googleLastSync = new Date().toLocaleString("pt-BR");
-      saveAppState();
-      updateGoogleSyncUI();
-      showToast("Progresso salvo no Google Drive!", "☁️");
-      return;
-    } catch (e) {
-      console.warn("Drive upload error:", e);
-    }
-  }
-  if (appState.googleWebhookUrl) {
-    try {
-      await fetch(appState.googleWebhookUrl, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(appState)
+    if (fileId) {
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
+        method: "PATCH",
+        headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+        body: payload
       });
-      appState.googleLastSync = new Date().toLocaleString("pt-BR");
-      saveAppState();
-      updateGoogleSyncUI();
-      showToast("Enviado para o Webhook Google!", "☁️");
-      return;
-    } catch (e) {}
+    } else {
+      const meta = { name: fileName, parents: ["appDataFolder"] };
+      const form = new FormData();
+      form.append("metadata", new Blob([JSON.stringify(meta)], { type: "application/json" }));
+      form.append("file", new Blob([payload], { type: "application/json" }));
+      await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token },
+        body: form
+      });
+    }
+    user.googleLastSync = new Date().toLocaleString("pt-BR");
+    saveAppState();
+    updateGoogleSyncUI();
+    showToast(`Progresso de ${user.name} salvo no Drive (${user.gmail})!`, "☁️");
+  } catch (e) {
+    console.warn("Drive upload error:", e);
+    showToast("Erro ao salvar no Google Drive. Tente reconectar o Gmail.", "❌");
   }
-  appState.googleLastSync = new Date().toLocaleString("pt-BR");
-  saveAppState();
-  updateGoogleSyncUI();
-  showToast("Progresso salvo localmente! Use o Código Rápido ou Google OAuth para nuvem.", "💾");
 }
 
 async function pullFromGoogleCloud() {
-  if (!googleAccessToken && ((appState.googleClientId || "").trim() || DEFAULT_GOOGLE_CLIENT_ID)) {
+  const user = getActiveUser();
+  if (!user.gmail) {
+    showToast(`${user.name} não possui Gmail conectado. Conecte o Gmail de ${user.name} primeiro.`, "📱");
     startRealGoogleOAuthSignIn();
     return;
   }
-  if (googleAccessToken) {
-    try {
-      const searchRes = await fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='vagnilds_francais_backup.json'&fields=files(id)", {
-        headers: { Authorization: "Bearer " + googleAccessToken }
-      });
-      const searchJson = await searchRes.json();
-      const fileId = searchJson.files && searchJson.files[0] ? searchJson.files[0].id : null;
-      if (!fileId) {
-        showToast("Nenhum backup encontrado no seu Google Drive ainda.", "ℹ️");
-        return;
-      }
-      const dl = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-        headers: { Authorization: "Bearer " + googleAccessToken }
-      });
-      const data = await dl.json();
-      if (data && Array.isArray(data.users)) {
-        appState = Object.assign(appState, data);
-        saveAppState();
-        updateAllCountersAndHeaders();
-        renderLearnPath();
-        showToast("Progresso restaurado do Google Drive!", "📲");
-        return;
-      }
-    } catch (e) {
-      console.warn("Drive pull error:", e);
-    }
+  const token = userGoogleTokens[user.id];
+  if (!token) {
+    startRealGoogleOAuthSignIn();
+    return;
   }
-  if (appState.googleEmail) {
-    const raw = localStorage.getItem("vagnilds_google_backup_" + appState.googleEmail);
-    if (raw) {
-      appState = Object.assign(appState, JSON.parse(raw));
+  const fileName = getDriveBackupFilenameForUser(user);
+  try {
+    const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${encodeURIComponent(fileName)}'&fields=files(id)`, {
+      headers: { Authorization: "Bearer " + token }
+    });
+    const searchJson = await searchRes.json();
+    const fileId = searchJson.files && searchJson.files[0] ? searchJson.files[0].id : null;
+    if (!fileId) {
+      showToast(`Nenhum backup anterior encontrado no Gmail ${user.gmail}.`, "ℹ️");
+      return;
+    }
+    const dl = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+      headers: { Authorization: "Bearer " + token }
+    });
+    const data = await dl.json();
+    const restoredProfile = data && data.userProfile ? data.userProfile : (data && Array.isArray(data.users) ? data.users.find(x => (x.gmail || "").toLowerCase() === user.gmail.toLowerCase()) || data.users[0] : null);
+    if (restoredProfile) {
+      const keepId = user.id;
+      const keepGmail = user.gmail;
+      const keepAvatar = user.googleAvatar;
+      Object.assign(user, restoredProfile, {
+        id: keepId,
+        gmail: keepGmail,
+        googleAvatar: restoredProfile.googleAvatar || keepAvatar,
+        googleLastSync: new Date().toLocaleString("pt-BR")
+      });
       saveAppState();
       updateAllCountersAndHeaders();
       renderLearnPath();
-      showToast("Backup local da conta restaurado!", "📲");
-      return;
+      if (appState.activeTab === "ranking") renderRankingView();
+      showToast(`Progresso de ${user.name} restaurado de ${user.gmail}!`, "📲");
     }
+  } catch (e) {
+    console.warn("Drive pull error:", e);
+    showToast("Erro ao restaurar do Google Drive.", "❌");
   }
-  showToast("Conecte ao Google Drive ou cole um Código Rápido abaixo.", "ℹ️");
 }
 
 function copyGoogleSyncCode() {
   try {
-    const json = JSON.stringify({ users: appState.users, activeUserId: appState.activeUserId, customVocab: appState.customVocab || [] });
+    const user = getActiveUser();
+    const json = JSON.stringify({ singleUser: user });
     const code = btoa(unescape(encodeURIComponent(json)));
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code);
     }
     const inp = document.getElementById("googleSyncTokenInput");
     if (inp) inp.value = code;
-    showToast("Código de transferência copiado!", "📋");
+    showToast(`Código de transferência de ${user.name} copiado!`, "📋");
   } catch (e) {
     showToast("Erro ao gerar código.", "❌");
   }
@@ -4460,7 +4704,16 @@ function applyGoogleSyncCode() {
   try {
     const json = decodeURIComponent(escape(atob(code)));
     const parsed = JSON.parse(json);
-    if (parsed && Array.isArray(parsed.users) && parsed.users.length) {
+    if (parsed && parsed.singleUser) {
+      const user = getActiveUser();
+      const keepId = user.id;
+      Object.assign(user, parsed.singleUser, { id: keepId });
+      saveAppState();
+      updateAllCountersAndHeaders();
+      renderLearnPath();
+      closeGoogleSyncModal();
+      showToast(`Progresso de ${user.name} carregado com sucesso!`, "🔄");
+    } else if (parsed && Array.isArray(parsed.users) && parsed.users.length) {
       appState.users = parsed.users;
       if (parsed.activeUserId) appState.activeUserId = parsed.activeUserId;
       if (Array.isArray(parsed.customVocab)) appState.customVocab = parsed.customVocab;
