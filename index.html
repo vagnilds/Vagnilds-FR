@@ -297,7 +297,8 @@ box-shadow: 0 0 0 #cbd5e1;
 <button onclick="toggleMobileSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:bg-slate-100">✕</button>
 </div>
 <!-- Active Profile Card -->
-<div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-2.5 flex items-center justify-between">
+<div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-2.5 space-y-2">
+<div class="flex items-center justify-between gap-2">
 <div class="flex items-center gap-2.5 min-w-0">
 <div id="sidebarActiveAvatar" class="w-10 h-10 rounded-xl bg-emerald-100 border-2 border-emerald-300 flex items-center justify-center text-xl shrink-0">🦅</div>
 <div class="min-w-0">
@@ -309,7 +310,12 @@ box-shadow: 0 0 0 #cbd5e1;
 </div>
 </div>
 <button onclick="openUserSwitcherModal()" class="px-2.5 py-1.5 rounded-xl bg-white border-2 border-slate-200 hover:border-sky-400 text-xs font-extrabold text-sky-600 shrink-0 transition">
-Trocar ⇄
+Trocar Usuário ⇄
+</button>
+</div>
+<button type="button" onclick="openGoogleSyncModal()" id="sidebarTopCloudSyncBtn" class="w-full py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-sm transition">
+<span>☁️</span>
+<span id="sidebarTopCloudSyncLabel">Sincronizar com a Nuvem</span>
 </button>
 </div>
 </div>
@@ -1378,6 +1384,9 @@ Configurar
 <span>📲</span> <span>Restaurar da Nuvem</span>
 </button>
 </div>
+<button type="button" id="googleSignOutBtn" onclick="disconnectGoogleAccountForActiveUser()" class="hidden w-full py-2 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-black text-xs flex items-center justify-center gap-1.5 transition">
+<span>🚪</span> <span>Sair da Conta Gmail (Manter apenas neste aparelho)</span>
+</button>
 </div>
 <!-- Configuração do Client ID para Vercel + GitHub -->
 
@@ -2448,7 +2457,9 @@ function pickBestFrenchVoice() {
   const scored = voices.map(v => {
     let score = 0;
     if (/fr[-_]FR/i.test(v.lang)) score += 20;
-    if (/natural|neural|google|premium|enhanced|online|microsoft/i.test(v.name)) score += 35;
+    if (/natural|neural|online/i.test(v.name)) score += 80;
+    if (/google|premium|enhanced|denise|henri|eloise|vivienne|remy/i.test(v.name)) score += 50;
+    if (/hortense|paul|julie/i.test(v.name)) score -= 25; // Penaliza vozes SAPI5 antigas e robóticas do Windows
     if (wantMale && MALE_FR_REGEX.test(v.name)) score += 45;
     if (!wantMale && FEMALE_FR_REGEX.test(v.name)) score += 45;
     if (!wantMale && !MALE_FR_REGEX.test(v.name)) score += 10;
@@ -4454,7 +4465,15 @@ function updateGoogleSyncUI() {
   const img = document.getElementById("googleUserAvatarImg");
   const modalSub = document.getElementById("googleModalActiveUserSubtitle");
   const oauthBtnLbl = document.getElementById("googleOAuthBtnLabel");
+  const signOutBtn = document.getElementById("googleSignOutBtn");
+  const topCloudLbl = document.getElementById("sidebarTopCloudSyncLabel");
 
+  if (topCloudLbl) {
+    topCloudLbl.textContent = email ? `Nuvem Ativa (${email.split("@")[0]})` : "Sincronizar com a Nuvem";
+  }
+  if (signOutBtn) {
+    signOutBtn.classList.toggle("hidden", !email);
+  }
   if (modalSub) {
     modalSub.textContent = `Estudante ativo: ${user.name} (${email ? "sincronizando com " + email : "modo local neste aparelho"})`;
   }
@@ -4488,6 +4507,27 @@ function updateGoogleSyncUI() {
       img.classList.add("hidden");
     }
   }
+}
+
+function disconnectGoogleAccountForActiveUser() {
+  const user = getActiveUser();
+  const prevEmail = user.gmail;
+  if (userGoogleTokens[user.id]) {
+    try {
+      if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+        window.google.accounts.oauth2.revoke(userGoogleTokens[user.id], () => {});
+      }
+    } catch (e) {}
+    delete userGoogleTokens[user.id];
+  }
+  user.gmail = "";
+  user.googleAvatar = "";
+  user.googleLastSync = "";
+  user.lastActive = "Salvo neste aparelho";
+  saveAppState();
+  updateAllCountersAndHeaders();
+  if (appState.activeTab === "ranking") renderRankingView();
+  showToast(prevEmail ? `Saiu da conta ${prevEmail}. Progresso mantido neste aparelho.` : "Conta Gmail desconectada.", "🚪");
 }
 
 function getDriveBackupFilenameForUser(user) {
