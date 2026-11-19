@@ -217,11 +217,6 @@ box-shadow: 0 0 0 #cbd5e1;
 .flashcard-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .flashcard-back { transform: rotateY(180deg); }
 
-input, textarea, select, [contenteditable="true"] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-}
-
 </style>
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row bg-slate-50 text-slate-800">
@@ -287,16 +282,9 @@ input, textarea, select, [contenteditable="true"] {
 <div class="p-4 border-b-2 border-slate-100 shrink-0">
 <div class="flex items-center justify-between mb-3">
 <div onclick="handleBrandEasterEggClick()" class="flex items-center gap-2.5 cursor-pointer select-none group" title="Vagnilds Français">
-<div class="flex items-center gap-2">
-<div onclick="event.stopPropagation(); promptSwitchCourse('fr')" class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 via-white to-red-600 p-0.5 shadow-sm flex items-center justify-center cursor-pointer hover:scale-105 transition" title="Curso de Francês">
+<div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 via-white to-red-600 p-0.5 shadow-sm flex items-center justify-center group-active:scale-95 transition">
 <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 3 2" aria-label="França"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>
-</div>
-</div>
-<div onclick="event.stopPropagation(); promptSwitchCourse('pt')" class="w-10 h-10 rounded-2xl bg-gradient-to-br from-green-600 via-yellow-400 to-blue-700 p-0.5 shadow-sm flex items-center justify-center cursor-pointer hover:scale-105 transition" title="Curso de Português para Franceses">
-<div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 20 14" aria-label="Brasil"><rect width="20" height="14" fill="#009b3a"/><polygon points="10,1 19,7 10,13 1,7" fill="#fedf00"/><circle cx="10" cy="7" r="3.5" fill="#002776"/></svg>
-</div>
+<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 3 2" aria-label="Bandeira da França"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>
 </div>
 </div>
 <div>
@@ -1372,6 +1360,27 @@ vocab: [
 { id: "v1_20", fr: "Pouvez-vous répéter ?", pt: "Você pode repetir?", pron: "pu-vê vu rê-pê-tê", exFr: "Pouvez-vous répéter l'adresse, s'il vous plaît ?", exPt: "Pode repetir o endereço, por favor?" },
 { id: "v1_21", fr: "Oui / Non / Peut-être", pt: "Sim / Não / Talvez", pron: "uí / nõ / pêu-tétr", exFr: "Oui, bien sûr !", exPt: "Sim, claro!" },
 { id: "v1_22", fr: "D'accord", pt: "De acordo / Combinado / OK", pron: "da-cór", exFr: "D'accord, on se voit demain.", exPt: "Combinado, nos vemos amanhã." }
+
+,{ id: "v_u1_100", fr: "Bon après-midi", pt: "Boa tarde", pron: "bõ a-pré-mi-di", exFr: "Bon après-midi, la boutique est ouverte ?", exPt: "Boa tarde, a loja está aberta?" }
+,{ id: "v_u1_101", fr: "Bonne journée", pt: "Tenha um bom dia", pron: "bón jur-nê", exFr: "Merci beaucoup et bonne journée !", exPt: "Muito obrigado e tenha um bom dia!" }
+,{ id: "v_u1_102", fr: "Bonne soirée", pt: "Tenha uma boa noite", pron: "bón suá-rê", exFr: "Bonne soirée et bon retour chez vous.", exPt: "Boa noite e bom retorno para casa." }
+,{ id: "v_u1_103", fr: "Bon week-end", pt: "Bom fim de semana", pron: "bõ ui-kènd", exFr: "À lundi, bon week-end à toi !", exPt: "Até segunda, bom fim de semana para você!" }
+,{ id: "v_u1_104", fr: "Bon voyage", pt: "Boa viagem", pron: "bõ vua-iáj", exFr: "Bon voyage en France, profitez bien !", exPt: "Boa viagem à França, aproveite bem!" }
+,{ id: "v_u1_105", fr: "Bon courage", pt: "Força / Bom ânimo / Boa sorte na tarefa", pron: "bõ cu-ráj", exFr: "Tu as ton rendez-vous demain ? Bon courage !", exPt: "Você tem seu compromisso amanhã? Força!" }
+,{ id: "v_u1_106", fr: "Bon appétit", pt: "Bom apetite", pron: "bõ na-pê-ti", exFr: "Voici vos plats, bon appétit !", exPt: "Aqui estão seus pratos, bom apetite!" }
+,{ id: "v_u1_107", fr: "Je ne sais pas", pt: "Eu não sei", pron: "jêu nêu sê pá", exFr: "Désolé, je ne sais pas où il est.", exPt: "Desculpe, eu não sei onde ele está." }
+,{ id: "v_u1_108", fr: "Je comprends un peu", pt: "Eu entendo um pouco", pron: "jêu cõ-prãn ãn pê", exFr: "Je comprends un peu le français, mais je progresse.", exPt: "Entendo um pouco de francês, mas estou progredindo." }
+,{ id: "v_u1_109", fr: "Vous parlez anglais ?", pt: "Você fala inglês?", pron: "vu par-lê ã-glé", exFr: "Excusez-moi, est-ce que vous parlez anglais ?", exPt: "Com licença, você fala inglês?" }
+,{ id: "v_u1_110", fr: "Je parle un peu français", pt: "Eu falo um pouco de francês", pron: "jêu parl ãn pê frãn-sé", exFr: "Je parle un peu français et j'apprends tous les jours.", exPt: "Falo um pouco de francês e aprendo todos os dias." }
+,{ id: "v_u1_111", fr: "Comment ça s'écrit ?", pt: "Como isso se escreve?", pron: "cô-mãn sa sê-crí", exFr: "Comment ça s'écrit votre nom de famille ?", exPt: "Como se escreve seu sobrenome?" }
+,{ id: "v_u1_112", fr: "Épelez s'il vous plaît", pt: "Soletre por favor", pron: "ê-pêu-lê sil vu plé", exFr: "Pouvez-vous épeler votre adresse e-mail ?", exPt: "Pode soletrar seu endereço de e-mail?" }
+,{ id: "v_u1_113", fr: "Merci d'avance", pt: "Obrigado desde já", pron: "mér-si da-vãns", exFr: "Merci d'avance pour votre réponse rapide.", exPt: "Obrigado desde já pela resposta rápida." }
+,{ id: "v_u1_114", fr: "Avec plaisir", pt: "Com prazer", pron: "a-vék plê-zír", exFr: "— Tu peux m'aider ? — Avec plaisir !", exPt: "— Você pode me ajudar? — Com prazer!" }
+,{ id: "v_u1_115", fr: "Pas de problème", pt: "Sem problema", pron: "pá dêu prô-blém", exFr: "Pas de problème, on fait comme ça.", exPt: "Sem problema, fazemos assim." }
+,{ id: "v_u1_116", fr: "C'est gentil", pt: "É gentileza / Que gentil", pron: "sé jãn-ti", exFr: "C'est très gentil de votre part.", exPt: "É muita gentileza da sua parte." }
+,{ id: "v_u1_117", fr: "Je suis désolé(e)", pt: "Eu sinto muito / Desculpe", pron: "jêu suí dê-zô-lê", exFr: "Je suis désolé pour le retard.", exPt: "Sinto muito pelo atraso." }
+,{ id: "v_u1_118", fr: "À votre santé", pt: "À sua saúde (brinde)", pron: "a vótr sãn-tê", exFr: "Santé ! Bienvenue en France !", exPt: "Saúde! Bem-vindo à França!" }
+,{ id: "v_u1_119", fr: "Joyeux anniversaire", pt: "Feliz aniversário", pron: "juá-iêu za-ni-vér-sér", exFr: "Joyeux anniversaire et tous mes vœux !", exPt: "Feliz aniversário e votos de felicidade!" }
 ]
 },
 {
@@ -1403,6 +1412,25 @@ vocab: [
 { id: "v2_16", fr: "Matin / Après-midi / Soir", pt: "Manhã / Tarde / Noite", pron: "ma-tãn / a-pré-mi-di / suár", exFr: "Ce matin, il fait froid.", exPt: "Esta manhã faz frio." },
 { id: "v2_17", fr: "Où / Quand / Comment / Pourquoi / Combien", pt: "Onde / Quando / Como / Por que / Quanto", pron: "ú / kãn / cô-mãn / pur-kuá / cõ-biãn", exFr: "Combien ça coûte ?", exPt: "Quanto custa isso?" },
 { id: "v2_18", fr: "Toujours / Souvent / Jamais", pt: "Sempre / Frequentemente / Nunca", pron: "tu-jur / su-vãn / ja-mé", exFr: "Je prends toujours le train.", exPt: "Eu sempre pego o trem." }
+
+,{ id: "v_u2_100", fr: "Faire", pt: "Fazer", pron: "fér", exFr: "Qu'est-ce que tu fais ce soir ?", exPt: "O que você faz hoje à noite?" }
+,{ id: "v_u2_101", fr: "Aller", pt: "Ir", pron: "a-lê", exFr: "Nous allons à la gare en train.", exPt: "Nós vamos à estação de trem." }
+,{ id: "v_u2_102", fr: "Vouloir", pt: "Querer", pron: "vu-luár", exFr: "Je veux apprendre le français couramment.", exPt: "Quero aprender francês fluentemente." }
+,{ id: "v_u2_103", fr: "Pouvoir", pt: "Poder", pron: "pu-vuár", exFr: "Est-ce que je peux entrer ?", exPt: "Posso entrar?" }
+,{ id: "v_u2_104", fr: "Devoir", pt: "Dever / Ter que", pron: "dêu-vuár", exFr: "Je dois aller à la banque aujourd'hui.", exPt: "Tenho que ir ao banco hoje." }
+,{ id: "v_u2_105", fr: "Savouir / Savoir", pt: "Saber", pron: "sa-vuár", exFr: "Savez-vous à quelle heure arrive le bus ?", exPt: "Você sabe a que horas chega o ônibus?" }
+,{ id: "v_u2_106", fr: "Connaître", pt: "Conhecer (pessoas, lugares, obras)", pron: "cô-nétr", exFr: "Je connais bien le quartier de Lyon.", exPt: "Conheço bem o bairro de Lyon." }
+,{ id: "v_u2_107", fr: "Prendre", pt: "Pegar / Tomar", pron: "prãndr", exFr: "Je prends le métro tous les matins.", exPt: "Pego o metrô todas as manhãs." }
+,{ id: "v_u2_108", fr: "Venir", pt: "Vir", pron: "vêu-nír", exFr: "Tu viens avec nous demain ?", exPt: "Você vem conosco amanhã?" }
+,{ id: "v_u2_109", fr: "Partir", pt: "Partir / Ir embora", pron: "par-tír", exFr: "Nous partons tôt demain matin.", exPt: "Partimos cedo amanhã de manhã." }
+,{ id: "v_u2_110", fr: "Onze, douze, treize, quatorze, quinze", pt: "11, 12, 13, 14, 15", pron: "õz, duz, tréz, ka-tórz, kãnz", exFr: "Il est quinze heures trente.", exPt: "São 15h30." }
+,{ id: "v_u2_111", fr: "Seize, dix-sept, dix-huit, dix-neuf", pt: "16, 17, 18, 19", pron: "séz, di-sét, di-zuít, di-znêf", exFr: "Dix-neuf euros cinquante, s'il vous plaît.", exPt: "19,50 euros, por favor." }
+,{ id: "v_u2_112", fr: "Mille / Un million", pt: "Mil / Um milhão", pron: "míl / ãn mi-liõ", exFr: "Le voyage coûte mille euros.", exPt: "A viagem custa mil euros." }
+,{ id: "v_u2_113", fr: "Premier / Deuxième / Troisième", pt: "Primeiro / Segundo / Terceiro", pron: "prêu-miê / dê-ziém / truá-ziém", exFr: "C'est au deuxième étage.", exPt: "Fica no segundo andar." }
+,{ id: "v_u2_114", fr: "Janvier, février, mars, avril", pt: "Janeiro, fevereiro, março, abril", pron: "jãn-viê, fê-vri-ê, mars, a-vríl", exFr: "J'arrive en France au mois d'avril.", exPt: "Chego à França no mês de abril." }
+,{ id: "v_u2_115", fr: "Mai, juin, juillet, août", pt: "Maio, junho, julho, agosto", pron: "mé, juãn, ju-iê, ú", exFr: "Les vacances d'été sont en juillet et août.", exPt: "As férias de verão são em julho e agosto." }
+,{ id: "v_u2_116", fr: "Septembre, octobre, novembre, décembre", pt: "Setembro, outubro, novembro, dezembro", pron: "sép-tãnbr, ók-tóbr, nô-vãnbr, dê-sãnbr", exFr: "En décembre, il fait froid à Paris.", exPt: "Em dezembro faz frio em Paris." }
+,{ id: "v_u2_117", fr: "Maintenant / Tout de suite / Plus tard", pt: "Agora / Imediatamente / Mais tarde", pron: "mãn-têu-nãn / tu dêu suít / plü tár", exFr: "J'arrive tout de suite !", exPt: "Chego já / imediatamente!" }
 ]
 },
 {
@@ -1430,6 +1458,19 @@ vocab: [
 { id: "v3_12", fr: "La sortie / L'arrivée / Le départ", pt: "A saída / A chegada / A partida", pron: "la sór-ti / la-ri-vê / lêu dê-pár", exFr: "Suivez les panneaux vers la sortie.", exPt: "Siga as placas para a saída." },
 { id: "v3_13", fr: "Le titre de séjour", pt: "A autorização de residência (cartão de residente)", pron: "lêu títr dêu sê-júr", exFr: "Je dois renouveler mon titre de séjour.", exPt: "Preciso renovar meu título de residência." },
 { id: "v3_14", fr: "L'assurance voyage et santé", pt: "O seguro viagem e saúde", pron: "la-sü-rãns vua-iáj ê sãn-tê", exFr: "Voici mon attestation d'assurance.", exPt: "Aqui está meu certificado de seguro." }
+
+,{ id: "v_u3_100", fr: "L'avion / Le décollage / L'atterrissage", pt: "O avião / A decolagem / O pouso", pron: "la-viõ / lêu dê-cô-láj / la-tê-ri-sáj", exFr: "L'atterrissage est prévu à six heures du matin.", exPt: "O pouso está previsto para as 6h da manhã." }
+,{ id: "v_u3_101", fr: "Le guichet / L'enregistrement", pt: "O balcão / O check-in", pron: "lêu gi-xé / lãn-rêu-jis-trêu-mãn", exFr: "L'enregistrement des bagages ouvre trois heures avant.", exPt: "O check-in de bagagens abre três horas antes." }
+,{ id: "v_u3_102", fr: "La fiche de police / L'adresse en France", pt: "Endereço de estadia na França", pron: "la-drés ãn frãns", exFr: "Voici l'adresse où je vais loger à Paris.", exPt: "Aqui está o endereço onde vou ficar em Paris." }
+,{ id: "v_u3_103", fr: "Le chariot à bagages", pt: "O carrinho de bagagens", pron: "lêu xa-riô a ba-gáj", exFr: "Je prends un chariot pour mes valises.", exPt: "Pego um carrinho para minhas malas." }
+,{ id: "v_u3_104", fr: "Le bureau de change", pt: "A casa de câmbio", pron: "lêu bü-rô dêu xãnj", exFr: "Où se trouve le bureau de change ?", exPt: "Onde fica a casa de câmbio?" }
+,{ id: "v_u3_105", fr: "Le taxi / Le VTC (Uber/Bolt)", pt: "O táxi / Carro por aplicativo", pron: "lêu ták-si / lêu vê-tê-sê", exFr: "Je commande un VTC pour aller à l'hôtel.", exPt: "Chamo um carro por aplicativo para ir ao hotel." }
+,{ id: "v_u3_106", fr: "La navette aéroport", pt: "O ônibus/translado do aeroporto", pron: "la na-vét a-ê-rô-pór", exFr: "La navette part toutes les quinze minutes.", exPt: "O translado sai a cada quinze minutos." }
+,{ id: "v_u3_107", fr: "Déclarer des marchandises", pt: "Declarar mercadorias", pron: "dê-cla-rê dê mar-xãn-díz", exFr: "Avez-vous des objets à déclarer ?", exPt: "Você tem itens a declarar?" }
+,{ id: "v_u3_108", fr: "La carte de séjour pluriannuelle", pt: "Cartão de residência plurianual", pron: "la cárt dêu sê-júr plü-ri-a-nü-él", exFr: "Après le VLS-TS, on demande la carte pluriannuelle.", exPt: "Após o VLS-TS, pede-se o cartão plurianual." }
+,{ id: "v_u3_109", fr: "Le cachet d'entrée", pt: "O carimbo de entrada no passaporte", pron: "lêu ca-xé dãn-trê", exFr: "Le douanier a mis le cachet d'entrée.", exPt: "O agente colocou o carimbo de entrada." }
+,{ id: "v_u3_110", fr: "Les objets interdits", pt: "Itens proibidos", pron: "lê zób-jê zãn-tér-di", exFr: "Certains aliments sont interdits à l'entrée.", exPt: "Certos alimentos são proibidos na entrada." }
+,{ id: "v_u3_111", fr: "L'accueil / Le point information", pt: "A recepção / O balcão de informações", pron: "la-kêu / lêu puãn ãn-fór-ma-siõ", exFr: "Demandez au point information de l'aéroport.", exPt: "Pergunte no balcão de informações do aeroporto." }
 ]
 },
 {
@@ -1457,6 +1498,19 @@ vocab: [
 { id: "v4_12", fr: "La station-service / L'essence / Le gazole", pt: "O posto de combustível / Gasolina / Diesel", pron: "la sta-siõ sér-vis / lê-sãns / lêu ga-zól", exFr: "Je dois faire le plein d'essence.", exPt: "Preciso encher o tanque de gasolina." },
 { id: "v4_13", fr: "Le contrôleur / L'amende", pt: "O fiscal / A multa", pron: "lêu cõ-trô-lêr / la-mãnd", exFr: "Attention aux amendes si le ticket n'est pas validé.", exPt: "Cuidado com as multas se o bilhete não estiver validado." },
 { id: "v4_14", fr: "La grève des transports", pt: "A greve dos transportes", pron: "la grév dê trãns-pór", exFr: "Aujourd'hui le trafic est perturbé à cause d'une grève.", exPt: "Hoje o tráfego está afetado por causa de uma greve." }
+
+,{ id: "v_u4_100", fr: "Le bus / Le tramway / Le RER", pt: "O ônibus / O bonde moderno / O trem suburbano", pron: "lêu büs / lêu trãm-uê / lêu êr-ê-ér", exFr: "Le RER B va directement à l'aéroport.", exPt: "O RER B vai direto para o aeroporto." }
+,{ id: "v_u4_101", fr: "Le changement de ligne / La correspondance", pt: "A baldeação / Conexão de linha", pron: "lêu xãn-jêu-mãn dêu lí-nh", exFr: "Il faut faire un changement à Châtelet.", exPt: "É preciso fazer baldeação em Châtelet." }
+,{ id: "v_u4_102", fr: "L'horaire / Le prochain train", pt: "O horário / O próximo trem", pron: "lô-rér / lêu prô-xãn trãn", exFr: "À quelle heure passe le prochain train ?", exPt: "A que horas passa o próximo trem?" }
+,{ id: "v_u4_103", fr: "En avance / À l'heure / En retard", pt: "Adiantado / Na hora / Atrasado", pron: "ãn a-vãns / a lêr / ãn rêu-tár", exFr: "Le train est toujours à l'heure.", exPt: "O trem está sempre na hora." }
+,{ id: "v_u4_104", fr: "Le guichet automatique / La borne", pt: "Máquina de autoatendimento de bilhetes", pron: "lêu gi-xé ô-tô-ma-tík / la bórn", exFr: "J'achète mon billet à la borne de la station.", exPt: "Compro minha passagem na máquina da estação." }
+,{ id: "v_u4_105", fr: "Le carnet de tickets", pt: "Pacote/cartela de bilhetes", pron: "lêu car-né dêu ti-ké", exFr: "Je prends un carnet de dix tickets.", exPt: "Pego um pacote de dez bilhetes." }
+,{ id: "v_u4_106", fr: "Tourner à droite / Tourner à gauche", pt: "Virar à direita / Virar à esquerda", pron: "tur-nê a druát / tur-nê a gôx", exFr: "Tournez à droite au feu rouge.", exPt: "Vire à direita no semáforo." }
+,{ id: "v_u4_107", fr: "Traverser la rue / Le passage piéton", pt: "Atravessar a rua / A faixa de pedestres", pron: "tra-vér-sê la rü / lêu pa-sáj pi-ê-tõ", exFr: "Traversez sur le passage piéton.", exPt: "Atravesse na faixa de pedestres." }
+,{ id: "v_u4_108", fr: "Le rond-point / Le carrefour", pt: "A rotatória / O cruzamento", pron: "lêu rõ-puãn / lêu car-fúr", exFr: "Prenez la deuxième sortie au rond-point.", exPt: "Pegue a segunda saída na rotatória." }
+,{ id: "v_u4_109", fr: "La carte de transport / Le tarif réduit", pt: "Cartão de transporte / Tarifa reduzida", pron: "la cárt dêu trãns-pór / lêu ta-ríf rê-düí", exFr: "J'ai droit au tarif réduit.", exPt: "Tenho direito à tarifa reduzida." }
+,{ id: "v_u4_110", fr: "Le vélo en libre-service (Vélib')", pt: "Bicicleta compartilhada da cidade", pron: "lêu vê-lô ãn líbr sér-vís", exFr: "Je loue un vélo pour me balader le dimanche.", exPt: "Alugo uma bicicleta para passear no domingo." }
+,{ id: "v_u4_111", fr: "L'itinéraire / Le plan du métro", pt: "O trajeto / O mapa do metrô", pron: "li-ti-nê-rér / lêu plãn dü mê-trô", exFr: "Vérifions l'itinéraire avant de partir.", exPt: "Vamos conferir o trajeto antes de sair." }
 ]
 },
 {
@@ -1484,6 +1538,19 @@ vocab: [
 { id: "v5_12", fr: "Le rez-de-chaussée / L'ascenseur", pt: "O andar térreo / O elevador", pron: "lêu rê-dêu-xô-sê / la-sãn-sêr", exFr: "L'appartement est au troisième étage avec ascenseur.", exPt: "O apartamento fica no 3º andar com elevador." },
 { id: "v5_13", fr: "Le digicode / L'interphone / La boîte aux lettres", pt: "A senha do portão / O interfone / A caixa de correio", pron: "lêu di-ji-cód / la buát ô létr", exFr: "Mon nom doit être sur la boîte aux lettres pour recevoir le courrier.", exPt: "Meu nome deve estar na caixa de correio para receber correspondência." },
 { id: "v5_14", fr: "Le propriétaire / Le locataire / Le colocataire", pt: "O proprietário / O inquilino / O colega de apartamento", pron: "lêu prô-pri-ê-tér / lêu lô-ca-tér", exFr: "Mon propriétaire est très sympathique.", exPt: "Meu proprietário é muito simpático." }
+
+,{ id: "v_u5_100", fr: "La chambre / Le salon / La salle de bain", pt: "O quarto / A sala / O banheiro", pron: "la xãnbr / lêu sa-lõ / la sál dêu bãn", exFr: "La salle de bain a une douche et un lavabo.", exPt: "O banheiro tem chuveiro e pia." }
+,{ id: "v_u5_101", fr: "La cuisine équipée / Le balcon", pt: "A cozinha equipada / A varanda", pron: "la kui-zín ê-ki-pê / lêu bál-cõ", exFr: "L'appartement a une cuisine équipée et un petit balcon.", exPt: "O apartamento tem cozinha equipada e pequena varanda." }
+,{ id: "v_u5_102", fr: "Le préavis de départ", pt: "O aviso prévio de saída do imóvel", pron: "lêu prê-a-ví dêu dê-pár", exFr: "Le préavis est généralement d'un mois en meublé.", exPt: "O aviso prévio é geralmente de um mês em imóvel mobiliado." }
+,{ id: "v_u5_103", fr: "Les charges locatives", pt: "As taxas condominiais do inquilino", pron: "lê xárj lô-ca-tív", exFr: "L'eau froide et l'entretien de l'immeuble sont dans les charges.", exPt: "Água fria e manutenção do prédio estão nas taxas." }
+,{ id: "v_u5_104", fr: "La box internet / La fibre optique", pt: "Roteador de internet / Fibra óptica", pron: "la bóks ãn-tér-nét / la fíbr óp-tík", exFr: "J'ai demandé l'installation de la fibre optique.", exPt: "Pedi a instalação da fibra óptica." }
+,{ id: "v_u5_105", fr: "L'attestation d'hébergement", pt: "Declaração de hospedagem/moradia", pron: "la-tés-ta-siõ dê-bér-jêu-mãn", exFr: "Mon ami m'a fait une attestation d'hébergement.", exPt: "Meu amigo fez uma declaração de hospedagem para mim." }
+,{ id: "v_u5_106", fr: "La visite d'appartement", pt: "A visita ao apartamento", pron: "la vi-zít da-par-têu-mãn", exFr: "J'ai deux visites d'appartement prévues cet après-midi.", exPt: "Tenho duas visitas de apartamento marcadas hoje à tarde." }
+,{ id: "v_u5_107", fr: "L'agence immobilière / Le particulier", pt: "A imobiliária / Proprietário direto", pron: "la-jãns i-mô-bi-li-ér / lêu par-ti-kü-liê", exFr: "Louer de particulier à particulier évite les frais d'agence.", exPt: "Alugar direto com proprietário evita taxas de imobiliária." }
+,{ id: "v_u5_108", fr: "Les honoraires d'agence", pt: "Taxa de corretagem da imobiliária", pron: "lê zô-nô-rér da-jãns", exFr: "Les honoraires d'agence sont encadrés par la loi.", exPt: "As taxas da imobiliária são regulamentadas por lei." }
+,{ id: "v_u5_109", fr: "La clé / Le double des clés", pt: "A chave / A cópia das chaves", pron: "la clê / lêu dubl dê clê", exFr: "J'ai reçu les clés de l'appartement aujourd'hui.", exPt: "Recebi as chaves do apartamento hoje." }
+,{ id: "v_u5_110", fr: "Le ménage / Ranger l'appartement", pt: "A limpeza / Organizar o apartamento", pron: "lêu mê-náj / rãn-jê la-par-têu-mãn", exFr: "On fait le ménage ensemble le samedi matin.", exPt: "Fazemos a limpeza juntos no sábado de manhã." }
+,{ id: "v_u5_111", fr: "La taxe d'habitation / La taxe foncière", pt: "Impostos ligados à moradia", pron: "la táks da-bi-ta-siõ", exFr: "Renseignez-vous sur les taxes liées au logement.", exPt: "Informe-se sobre os impostos ligados à moradia." }
 ]
 },
 {
@@ -1509,6 +1576,19 @@ vocab: [
 { id: "v6_10", fr: "Avez-vous la carte de fidélité ?", pt: "Você tem o cartão fidelidade da loja?", pron: "a-vê vu la cárt dêu fi-dê-li-tê", exFr: "Non, je n'ai pas la carte du magasin.", exPt: "Não, não tenho o cartão da loja." },
 { id: "v6_11", fr: "Souhaitez-vous le ticket de caisse ?", pt: "Você deseja o cupom fiscal/nota?", pron: "su-é-tê vu lêu ti-kê dêu kés", exFr: "Oui, je voudrais le ticket de caisse, s'il vous plaît.", exPt: "Sim, gostaria do comprovante, por favor." },
 { id: "v6_12", fr: "Un sac cabas", pt: "Uma sacola retornável de compras", pron: "ãn sák ca-bá", exFr: "J'ai apporté mon sac cabas.", exPt: "Eu trouxe minha sacola retornável." }
+
+,{ id: "v_u6_100", fr: "La boucherie / Le boucher", pt: "O açougue / O açougueiro", pron: "la bu-xêu-rí / lêu bu-xê", exFr: "Je vais à la boucherie acheter du bœuf.", exPt: "Vou ao açougue comprar carne bovina." }
+,{ id: "v_u6_101", fr: "La fromagerie / Le fromager", pt: "A queijaria / O queijeiro", pron: "la frô-máj-rî / lêu frô-ma-jê", exFr: "Conseillez-moi un fromage doux, s'il vous plaît.", exPt: "Indique-me um queijo suave, por favor." }
+,{ id: "v_u6_102", fr: "Le marché en plein air", pt: "A feira livre ao ar livre", pron: "lêu mar-xê ãn plãn ér", exFr: "Le marché du dimanche a des fruits très frais.", exPt: "A feira de domingo tem frutas bem frescas." }
+,{ id: "v_u6_103", fr: "Un kilo / Cinq cents grammes / Une livre", pt: "Um quilo / 500 gramas / Meio quilo", pron: "ãn ki-lô / sãn sãn grám / ün lívr", exFr: "Donnez-moi cinq cents grammes de pommes de terre.", exPt: "Dê-me quinhentos gramas de batatas." }
+,{ id: "v_u6_104", fr: "L'huile d'olive / Le vinaigre / Le sel / Le poivre", pt: "Azeite / Vinagre / Sal / Pimenta", pron: "lüíl dô-lív / lêu vi-négr / lêu sél", exFr: "J'ai besoin d'huile d'olive et de sel.", exPt: "Preciso de azeite e de sal." }
+,{ id: "v_u6_105", fr: "Les pâtes / La farine / Le sucre", pt: "O macarrão / A farinha / O açúcar", pron: "lê pát / la fa-rín / lêu sükr", exFr: "J'achète des pâtes, de la farine et du sucre.", exPt: "Compro macarrão, farinha e açúcar." }
+,{ id: "v_u6_106", fr: "La tomate / L'oignon / L'ail / La pomme de terre", pt: "O tomate / A cebola / O alho / A batata", pron: "la tô-mát / lô-nhõ / lái / la póm dêu tér", exFr: "Des tomates bien mûres et de l'ail, s'il vous plaît.", exPt: "Tomates bem maduros e alho, por favor." }
+,{ id: "v_u6_107", fr: "La pomme / La banane / L'orange / La fraise", pt: "A maçã / A banana / A laranja / O morango", pron: "la póm / la ba-ná-n / lô-rãnj / la fréz", exFr: "Les fraises de saison sont délicieuses.", exPt: "Os morangos da estação são deliciosos." }
+,{ id: "v_u6_108", fr: "Le jus d'orange / Le thé / L'eau gazeuse", pt: "Suco de laranja / Chá / Água com gás", pron: "lêu jü dô-rãnj / lêu tê / lô ga-zêu", exFr: "Un jus d'orange pressé et une eau gazeuse.", exPt: "Um suco de laranja espremido e uma água com gás." }
+,{ id: "v_u6_109", fr: "La date de péremption / En promotion", pt: "Data de validade / Na promoção", pron: "la dát dêu pê-rãn-psiõ / ãn prô-mô-siõ", exFr: "Ce café est en promotion cette semaine.", exPt: "Este café está na promoção esta semana." }
+,{ id: "v_u6_110", fr: "Le caddie / Le panier", pt: "O carrinho de supermercado / A cestinha", pron: "lêu ca-di / lêu pa-ni-ê", exFr: "Je prends un panier pour quelques articles.", exPt: "Pego uma cestinha para poucos itens." }
+,{ id: "v_u6_111", fr: "Rembourser / Un avoir", pt: "Reembolsar / Crédito na loja", pron: "rãn-bur-sê / ãn na-vuár", exFr: "Le magasin fait un avoir valable six mois.", exPt: "A loja emite um crédito válido por seis meses." }
 ]
 },
 {
@@ -1532,6 +1612,19 @@ vocab: [
 { id: "v7_8", fr: "Les couverts (la fourchette, le couteau, la cuillère)", pt: "Os talheres (o garfo, a faca, a colher)", pron: "lê cu-vér (la fur-xét, lêu cu-tô, la kui-iér)", exFr: "Il manque une fourchette et une serviette.", exPt: "Falta um garfo e um guardanapo." },
 { id: "v7_9", fr: "Je suis allergique à...", pt: "Eu sou alérgico(a) a...", pron: "jêu suí za-lér-jík a", exFr: "Est-ce qu'il y a des arachides dans ce plat ?", exPt: "Tem amendoim neste prato?" },
 { id: "v7_10", fr: "C'était délicieux !", pt: "Estava delicioso!", pron: "sê-té dê-li-siêu", exFr: "Merci beaucoup, c'était vraiment délicieux.", exPt: "Muito obrigado, estava realmente delicioso." }
+
+,{ id: "v_u7_100", fr: "Réserver une table", pt: "Reservar uma mesa", pron: "rê-zér-vê ün tábl", exFr: "Je voudrais réserver une table pour deux à vingt heures.", exPt: "Gostaria de reservar uma mesa para dois às 20h." }
+,{ id: "v_u7_101", fr: "La carte / Le menu", pt: "O cardápio / O menu", pron: "la cárt / lêu mê-nü", exFr: "Pouvons-nous voir la carte, s'il vous plaît ?", exPt: "Podemos ver o cardápio, por favor?" }
+,{ id: "v_u7_102", fr: "Le serveur / La serveuse", pt: "O garçom / A garçonete", pron: "lêu sér-vêr / la sér-vêu", exFr: "Excusez-moi Monsieur, pouvez-vous nous conseiller ?", exPt: "Com licença senhor, pode nos aconselhar?" }
+,{ id: "v_u7_103", fr: "La terrasse / À l'intérieur", pt: "A área externa / Lá dentro", pron: "la tê-rás / a lãn-tê-ri-êr", exFr: "Nous préférons être en terrasse s'il fait beau.", exPt: "Preferimos ficar na área externa se fizer bom tempo." }
+,{ id: "v_u7_104", fr: "La soupe / La salade / Les frites", pt: "A sopa / A salada / As batatas fritas", pron: "la sup / la sa-lád / lê frít", exFr: "Je prends le steak avec des frites et une salade.", exPt: "Peço o bife com batatas fritas e salada." }
+,{ id: "v_u7_105", fr: "Végétarien / Sans gluten / Sans lactose", pt: "Vegetariano / Sem glúten / Sem lactose", pron: "vê-jê-ta-riãn / sãn glü-tén", exFr: "Avez-vous une option végétarienne aujourd'hui ?", exPt: "Vocês têm opção vegetariana hoje?" }
+,{ id: "v_u7_106", fr: "La tarte / La mousse au chocolat / La glace", pt: "A torta / A mousse de chocolate / O sorvete", pron: "la tárt / la mus ô xô-cô-lá / la glás", exFr: "Comme dessert, une mousse au chocolat, s'il vous plaît.", exPt: "De sobremesa, uma mousse de chocolate, por favor." }
+,{ id: "v_u7_107", fr: "Le vin rouge / Le vin blanc / La bière", pt: "O vinho tinto / O vinho branco / A cerveja", pron: "lêu vãn rúj / lêu vãn blãn / la biér", exFr: "Un verre de vin rouge, s'il vous plaît.", exPt: "Uma taça de vinho tinto, por favor." }
+,{ id: "v_u7_108", fr: "Trop salé / Trop chaud / Très bon", pt: "Muito salgado / Muito quente / Muito bom", pron: "trô sa-lê / trô xô / tré bõ", exFr: "Ce plat est vraiment très bon !", exPt: "Este prato está realmente muito bom!" }
+,{ id: "v_u7_109", fr: "Partager un plat", pt: "Dividir/compartilhar um prato", pron: "par-ta-jê ãn plá", exFr: "On peut partager l'entrée ?", exPt: "Podemos dividir a entrada?" }
+,{ id: "v_u7_110", fr: "Le pourboire", pt: "A gorjeta", pron: "lêu pur-buár", exFr: "Le service est compris, mais on peut laisser un petit pourboire.", exPt: "O serviço está incluído, mas pode-se deixar uma pequena gorjeta." }
+,{ id: "v_u7_111", fr: "Bon après-midi et bon appétit", pt: "Boa tarde e bom apetite", pron: "bõ na-pré-mi-di ê bõ na-pê-ti", exFr: "Merci beaucoup, c'était parfait.", exPt: "Muito obrigado, estava perfeito." }
 ]
 },
 {
@@ -1557,6 +1650,19 @@ vocab: [
 { id: "v8_10", fr: "La déclaration d'impôts sur le revenu", pt: "A declaração de imposto de renda", pron: "la dê-cla-ra-siõ dãn-pô", exFr: "En France, tout résident doit faire sa déclaration d'impôts.", exPt: "Na França, todo residente deve fazer sua declaração de impostos." },
 { id: "v8_11", fr: "Une pièce d'identité / Une copie certifiée", pt: "Um documento de identidade / Uma cópia autenticada", pron: "ün piés di-dãn-ti-tê", exFr: "Veuillez joindre une copie de votre pièce d'identité.", exPt: "Anexe uma cópia do seu documento de identidade." },
 { id: "v8_12", fr: "Une lettre recommandée avec accusé de réception (LRAR)", pt: "Carta registrada com aviso de recebimento (usada para cancelar contratos!)", pron: "ün létr rêu-cô-mãn-dê", exFr: "Pour résilier le bail, il faut envoyer une lettre recommandée.", exPt: "Para rescindir o aluguel, é preciso enviar uma carta registrada." }
+
+,{ id: "v_u8_100", fr: "Le conseiller bancaire", pt: "O gerente / consultor bancário", pron: "lêu cõ-sê-iê bãn-kér", exFr: "Mon conseiller bancaire m'aide à ouvrir le compte.", exPt: "Meu consultor bancário me ajuda a abrir a conta." }
+,{ id: "v_u8_101", fr: "Le plafond de paiement / De retrait", pt: "Limite de pagamento / Limite de saque", pron: "lêu pla-fõ dêu pê-iêu-mãn", exFr: "Je voudrais augmenter le plafond de ma carte.", exPt: "Gostaria de aumentar o limite do meu cartão." }
+,{ id: "v_u8_102", fr: "Le découvert autorisé", pt: "O cheque especial / saldo negativo autorizado", pron: "lêu dê-cu-vér ô-tô-ri-zê", exFr: "Évitez le découvert pour ne pas payer d'agios.", exPt: "Evite o saldo negativo para não pagar tarifas." }
+,{ id: "v_u8_103", fr: "Le numéro de sécurité sociale", pt: "Número da previdência/saúde francesa", pron: "lêu nü-mê-rô dêu sê-kü-ri-tê sô-siál", exFr: "Le numéro provisoire arrive avant la Carte Vitale.", exPt: "O número provisório chega antes da Carte Vitale." }
+,{ id: "v_u8_104", fr: "La mise à jour de la Carte Vitale", pt: "Atualização do cartão Vitale em farmácia/posto", pron: "la mí-za-júr dêu la cárt vi-tál", exFr: "Pensez à mettre à jour votre Carte Vitale.", exPt: "Lembre-se de atualizar sua Carte Vitale." }
+,{ id: "v_u8_105", fr: "La convocation / Le récépissé", pt: "A convocação / O protocolo de pedido de residência", pron: "la cõ-vô-ca-siõ / lêu rê-sê-pi-sê", exFr: "Gardez bien votre récépissé de demande.", exPt: "Guarde bem seu protocolo de solicitação." }
+,{ id: "v_u8_106", fr: "L'avis d'imposition", pt: "A nota/comprovante de imposto de renda", pron: "la-ví dãn-pô-zi-siõ", exFr: "L'avis d'imposition est demandé pour certains dossiers.", exPt: "O comprovante de imposto de renda é pedido em alguns processos." }
+,{ id: "v_u8_107", fr: "Le courrier postal / La lettre", pt: "A correspondência / A carta", pron: "lêu cu-ri-ê pôs-tál / la létr", exFr: "J'ai reçu un courrier important dans ma boîte aux lettres.", exPt: "Recebi uma correspondência importante na minha caixa de correio." }
+,{ id: "v_u8_108", fr: "Signer un document / Parapher", pt: "Assinar um documento / Rubricar páginas", pron: "si-nhê ãn dô-kü-mãn", exFr: "Lisez bien le contrat avant de signer.", exPt: "Leia bem o contrato antes de assinar." }
+,{ id: "v_u8_109", fr: "La pièce justificative", pt: "Documento comprobatório", pron: "la piés jüs-ti-fi-ca-tív", exFr: "Toutes les pièces justificatives sont prêtes.", exPt: "Todos os documentos comprobatórios estão prontos." }
+,{ id: "v_u8_110", fr: "Le rendez-vous administratif", pt: "O agendamento administrativo", pron: "lêu rãn-dê-vú ad-mi-nis-tra-tíf", exFr: "J'ai un rendez-vous administratif mardi à 10h.", exPt: "Tenho um agendamento administrativo terça às 10h." }
+,{ id: "v_u8_111", fr: "Le service client / L'assistance", pt: "O atendimento ao cliente / Suporte", pron: "lêu sér-vis cliãn / la-sis-tãns", exFr: "J'appelle le service client pour vérifier mon dossier.", exPt: "Ligo para o atendimento ao cliente para verificar meu processo." }
 ]
 },
 {
@@ -1580,6 +1686,19 @@ vocab: [
 { id: "v9_8", fr: "Les urgences : le 15 (SAMU), le 17 (Police), le 18 (Pompiers), le 112", pt: "Emergências: 15 (Ambulância), 17 (Polícia), 18 (Bombeiros), 112 (Geral UE)", pron: "lê zür-jãns", exFr: "En cas d'urgence médicale grave, appelez le quinze.", exPt: "Em caso de emergência médica grave, ligue 15." },
 { id: "v9_9", fr: "Un comprimé toutes les huit heures", pt: "Um comprimido a cada oito horas", pron: "ãn cõ-pri-mê tut lê uít êr", exFr: "Prenez un comprimé pendant les repas.", exPt: "Tome um comprimido durante as refeições." },
 { id: "v9_10", fr: "La feuille de soins (pour le remboursement)", pt: "A guia médica em papel (para reembolso se ainda não tiver Carte Vitale)", pron: "la fêi dêu suãn", exFr: "Gardez la feuille de soins pour être remboursé par la CPAM.", exPt: "Guarde a guia de atendimento para ser reembolsado pela CPAM." }
+
+,{ id: "v_u9_100", fr: "Le médecin généraliste / Le spécialiste", pt: "O clínico geral / O médico especialista", pron: "lêu mêd-sãn jê-nê-ra-líst", exFr: "Je consulte un médecin généraliste puis un spécialiste.", exPt: "Consulto um clínico geral e depois um especialista." }
+,{ id: "v_u9_101", fr: "Le dentiste / L'ophtalmologue / Le kiné", pt: "O dentista / O oftalmologista / O fisioterapeuta", pron: "lêu dãn-tíst / lóf-tal-mô-lóg", exFr: "J'ai rendez-vous chez le dentiste jeudi prochain.", exPt: "Tenho consulta no dentista na próxima quinta." }
+,{ id: "v_u9_102", fr: "Les symptômes / La douleur", pt: "Os sintomas / A dor", pron: "lê sãnp-tôm / la du-lêr", exFr: "Décrivez vos symptômes au médecin.", exPt: "Descreva seus sintomas ao médico." }
+,{ id: "v_u9_103", fr: "La grippe / Le rhume / La toux", pt: "A gripe / O resfriado / A tosse", pron: "la gríp / lêu rüm / la tú", exFr: "J'ai un rhume et une petite toux depuis deux jours.", exPt: "Estou com resfriado e uma pequena tosse há dois dias." }
+,{ id: "v_u9_104", fr: "La prise de sang / L'analyse médicale", pt: "O exame de sangue / A análise médica", pron: "la príz dêu sãn / la-na-líz", exFr: "Le laboratoire fait la prise de sang le matin.", exPt: "O laboratório faz o exame de sangue de manhã." }
+,{ id: "v_u9_105", fr: "Le vaccin / La vaccination", pt: "A vacina / A vacinação", pron: "lêu vak-sãn / la vak-si-na-siõ", exFr: "Vérifiez que vos vaccins sont à jour.", exPt: "Verifique se suas vacinas estão em dia." }
+,{ id: "v_u9_106", fr: "Le sirop / La pommade / Le pansement", pt: "O xarope / A pomada / O curativo", pron: "lêu si-rô / la pô-mád / lêu pãns-mãn", exFr: "Le pharmacien m'a donné un pansement et une pommade.", exPt: "O farmacêutico me deu um curativo e uma pomada." }
+,{ id: "v_u9_107", fr: "Être enceinte / La grossesse", pt: "Estar grávida / A gravidez", pron: "étr ãn-sãnt / la grô-sés", exFr: "Le suivi médical est complet en France.", exPt: "O acompanhamento médico é completo na França." }
+,{ id: "v_u9_108", fr: "Se reposer / Boire beaucoup d'eau", pt: "Descansar / Beber bastante água", pron: "sêu rêu-pô-zê / buár bô-cú dô", exFr: "Le médecin conseille de se reposer et de boire de l'eau.", exPt: "O médico aconselha descansar e beber água." }
+,{ id: "v_u9_109", fr: "Les urgences de l'hôpital", pt: "O pronto-socorro / emergência do hospital", pron: "lê zür-jãns dê lô-pi-tál", exFr: "En cas d'urgence la nuit, allez aux urgences de l'hôpital.", exPt: "Em caso de emergência à noite, vá ao pronto-socorro do hospital." }
+,{ id: "v_u9_110", fr: "La carte européenne d'assurance maladie", pt: "Cartão europeu de saúde", pron: "la cárt ê-rô-pê-én da-sü-rãns", exFr: "Utile lors des déplacements en Europe.", exPt: "Útil durante deslocamentos na Europa." }
+,{ id: "v_u9_111", fr: "Le remboursement des soins", pt: "O reembolso dos atendimentos médicos", pron: "lêu rãn-bur-sêu-mãn dê suãn", exFr: "Le remboursement arrive directement sur le compte.", exPt: "O reembolso cai direto na conta." }
 ]
 },
 {
@@ -1605,6 +1724,19 @@ vocab: [
 { id: "v10_10", fr: "Les congés payés / Les RTT", pt: "As férias remuneradas (5 semanas/ano!) / Folgas compensatórias", pron: "lê cõ-jê pê-iê / lê ér-tê-tê", exFr: "Je vais poser mes congés payés en août.", exPt: "Vou tirar minhas férias em agosto." },
 { id: "v10_11", fr: "Cordialement / Bien à vous", pt: "Atenciosamente (fechamento padrão de e-mail profissional)", pron: "cór-di-al-mãn / biãn a vú", exFr: "Je reste à votre disposition. Cordialement.", exPt: "Fico à sua disposição. Atenciosamente." },
 { id: "v10_12", fr: "En pièce jointe (PJ)", pt: "Em anexo (no e-mail)", pron: "ãn piés ju-ãnt", exFr: "Veuillez trouver le rapport en pièce jointe.", exPt: "Segue o relatório em anexo." }
+
+,{ id: "v_u10_100", fr: "Postuler à une offre d'emploi", pt: "Candidatar-se a uma vaga de emprego", pron: "pôs-tü-lê a ün ófr dãn-pluá", exFr: "J'ai postulé à trois offres cette semaine.", exPt: "Candidatei-me a três vagas esta semana." }
+,{ id: "v_u10_101", fr: "Le recruteur / Les ressources humaines (RH)", pt: "O recrutador / O setor de Recursos Humanos", pron: "lêu rêu-crü-têr / lê rêu-surs ü-mên", exFr: "L'entretien avec les RH a duré quarante minutes.", exPt: "A entrevista com o RH durou quarenta minutos." }
+,{ id: "v_u10_102", fr: "L'expérience professionnelle / Les compétences", pt: "A experiência profissional / As habilidades", pron: "lêks-pê-ri-ãns / lê cõ-pê-tãns", exFr: "J'ai de l'expérience en systèmes et réseaux.", exPt: "Tenho experiência em sistemas e redes." }
+,{ id: "v_u10_103", fr: "Le temps plein / Le temps partiel", pt: "Tempo integral / Meio período", pron: "lêu tãn plãn / lêu tãn par-siél", exFr: "Mon poste est à temps plein du lundi au vendredi.", exPt: "Meu cargo é em tempo integral de segunda a sexta." }
+,{ id: "v_u10_104", fr: "Les horaires de travail / La pause déjeuner", pt: "O horário de trabalho / O intervalo para almoço", pron: "lê zô-rér dêu tra-vái", exFr: "La pause déjeuner dure souvent une heure.", exPt: "O intervalo de almoço costuma durar uma hora." }
+,{ id: "v_u10_105", fr: "Le collègue / Le chef d'équipe / Le manager", pt: "O colega / O líder de equipe / O gerente", pron: "lêu cô-lég / lêu xéf dê-kíp", exFr: "Mes collègues sont accueillants et disponibles.", exPt: "Meus colegas são acolhedores e acessíveis." }
+,{ id: "v_u10_106", fr: "Le bug / Résoudre un problème technique", pt: "O bug / Resolver um problema técnico", pron: "lêu bêg / rê-zudr ãn prô-blém", exFr: "Nous avons corrigé le bug sur le serveur.", exPt: "Corrigimos o bug no servidor." }
+,{ id: "v_u10_107", fr: "La sauvegarde / Le cloud / La cybersécurité", pt: "O backup / A nuvem / A cibersegurança", pron: "la sôv-gárd / lêu clávd / la si-bér-sê-kü-ri-tê", exFr: "La sauvegarde quotidienne protège les données.", exPt: "O backup diário protege os dados." }
+,{ id: "v_u10_108", fr: "Le projet / L'objectif / La deadline", pt: "O projeto / A meta / O prazo final", pron: "lêu prô-jê / lób-jék-tíf / la déd-láin", exFr: "Nous devons livrer le projet avant la deadline.", exPt: "Precisamos entregar o projeto antes do prazo." }
+,{ id: "v_u10_109", fr: "La formation professionnelle / Le CPF", pt: "Capacitação profissional / Conta de formação", pron: "la fór-ma-siõ prô-fê-siô-nél", exFr: "En France, chaque salarié cumule des droits à la formation.", exPt: "Na França, todo assalariado acumula direitos de capacitação." }
+,{ id: "v_u10_110", fr: "L'augmentation de salaire / La prime", pt: "O aumento salarial / O bônus", pron: "lôg-mãn-ta-siõ dêu sa-lér / la prím", exFr: "Nous discutons des objectifs annuels et de la prime.", exPt: "Discutimos as metas anuais e o bônus." }
+,{ id: "v_u10_111", fr: "Prendre rendez-vous / Confirmer l'horaire", pt: "Agendar reunião / Confirmar horário", pron: "prãndr rãn-dê-vú / cõ-fir-mê lô-rér", exFr: "Je confirme notre réunion de demain à quatorze heures.", exPt: "Confirmo nossa reunião de amanhã às 14h." }
 ]
 },
 {
@@ -1628,6 +1760,19 @@ vocab: [
 { id: "v11_8", fr: "Le remboursement / L'échange", pt: "O reembolso / A troca", pron: "lêu rãn-bur-sêu-mãn / lê-xãnj", exFr: "J'ai trente jours pour demander un échange.", exPt: "Tenho trinta dias para pedir uma troca." },
 { id: "v11_9", fr: "Le voisinage / Ne pas faire de bruit après 22h", pt: "A vizinhança / Não fazer barulho após as 22h (lei do silêncio)", pron: "lêu vua-zi-náj", exFr: "Nos voisins sont très calmes et respectueux.", exPt: "Nossos vizinhos são muito calmos e respeitosos." },
 { id: "v11_10", fr: "Un jour férié / Faire le pont", pt: "Um feriado / Emendar o feriado", pron: "ãn júr fê-riê / fér lêu põ", exFr: "Jeudi est férié, donc on va faire le pont vendredi !", exPt: "Quinta é feriado, então vamos emendar a sexta!" }
+
+,{ id: "v_u11_100", fr: "Le timbre / L'enveloppe / L'adresse postale", pt: "O selo / O envelope / O endereço postal", pron: "lêu tãnbr / lãn-vêu-lóp", exFr: "J'ai acheté des timbres pour envoyer le courrier.", exPt: "Comprei selos para enviar a correspondência." }
+,{ id: "v_u11_101", fr: "La musculation / Le cardio / L'étirement", pt: "Musculação / Cardio / Alongamento", pron: "la müs-kü-la-siõ / lêu car-diô", exFr: "Je commence toujours par l'échauffement et l'étirement.", exPt: "Sempre começo pelo aquecimento e alongamento." }
+,{ id: "v_u11_102", fr: "Le stade / Le terrain / L'arbitre / Le but", pt: "O estádio / O campo / O árbitro / O gol", pron: "lêu stád / lêu tê-rãn / lar-bítr / lêu bü", exFr: "Un bon défenseur anticipe les attaques.", exPt: "Um bom zagueiro antecipa os ataques." }
+,{ id: "v_u11_103", fr: "La coupe de cheveux / Le rasoir / La tondeuse", pt: "O corte de cabelo / O barbeador / A máquina", pron: "la cup dêu xêu-vê / lêu ra-zuár", exFr: "Une coupe propre et courte sur les côtés.", exPt: "Um corte limpo e curto nas laterais." }
+,{ id: "v_u11_104", fr: "Le plombier / L'électricien", pt: "O encanador / O eletricista", pron: "lêu plõ-biê / lê-lék-tri-si-siãn", exFr: "J'appelle le plombier pour réparer le robinet.", exPt: "Chamo o encanador para consertar a torneira." }
+,{ id: "v_u11_105", fr: "Les ordures ménagères / Recycler le verre", pt: "O lixo doméstico / Reciclar vidro", pron: "lê zór-dür mê-na-jér", exFr: "Le verre va dans les conteneurs spécifiques.", exPt: "O vidro vai para os contêineres específicos." }
+,{ id: "v_u11_106", fr: "La taille / La pointure / Trop grand / Trop petit", pt: "O tamanho de roupa / Numeração de calçado", pron: "la tái / la puãn-tür", exFr: "Avez-vous cette chaussure en quarante-deux ?", exPt: "Você tem este sapato no número 42?" }
+,{ id: "v_u11_107", fr: "Le reçu / La garantie du produit", pt: "O recibo / A garantia do produto", pron: "lêu rêu-sü / la ga-rãn-ti dü prô-düí", exFr: "Gardez le ticket pour la garantie de deux ans.", exPt: "Guarde o cupom para a garantia de dois anos." }
+,{ id: "v_u11_108", fr: "La copropriété / Le syndic", pt: "O condomínio / A administradora do prédio", pron: "la cô-prô-pri-ê-tê / lêu sãn-dík", exFr: "Le syndic gère l'entretien des parties communes.", exPt: "A administradora cuida da manutenção das áreas comuns." }
+,{ id: "v_u11_109", fr: "La laverie automatique", pt: "A lavanderia self-service", pron: "la lav-rí ô-tô-ma-tík", exFr: "Il y a une laverie automatique au bout de la rue.", exPt: "Há uma lavanderia automática no fim da rua." }
+,{ id: "v_u11_110", fr: "Faire du sport en plein air / Le parc", pt: "Praticar esporte ao ar livre / O parque", pron: "fér dü spór ãn plãn ér / lêu párk", exFr: "Courir dans le parc le matin fait beaucoup de bien.", exPt: "Correr no parque de manhã faz muito bem." }
+,{ id: "v_u11_111", fr: "Réparer une voiture / Le garage / Le mécano", pt: "Consertar carro / A oficina / O mecânico", pron: "rê-pa-rê ün vua-tür / lêu ga-ráj", exFr: "Le mécano a vérifié les freins et l'échappement.", exPt: "O mecânico verificou os freios e o escapamento." }
 ]
 },
 {
@@ -1656,6 +1801,19 @@ vocab: [
 { id: "v12_13", fr: "Ça te dit de... ? / On se capte plus tard", pt: "Você topa...? / A gente se fala mais tarde", pron: "sa têu di dêu / õ sêu cápt plü tár", exFr: "Ça te dit d'aller au cinéma ce soir ?", exPt: "Você topa ir ao cinema hoje à noite?" },
 { id: "v12_14", fr: "Nickel ! / Impeccable !", pt: "Perfeito! / Show de bola! / Tudo certo!", pron: "ni-kél / ãn-pê-cábl", exFr: "Tout est prêt pour le voyage ? — Oui, c'est nickel !", exPt: "Tudo pronto para a viagem? — Sim, está perfeito!" },
 { id: "v12_15", fr: "C'est pas grave / Laisse tomber", pt: "Não tem problema / Deixa pra lá", pron: "sé pá gráv / lés tõ-bê", exFr: "Tu es en retard ? T'inquiète, c'est pas grave.", exPt: "Você está atrasado? Relaxa, não tem problema." }
+
+,{ id: "v_u12_100", fr: "C'est clair ! / Tout à fait !", pt: "Está claro! / Com certeza absoluta!", pron: "sé clér / tu ta fé", exFr: "— On se retrouve à 19h ? — Tout à fait !", exPt: "— Nos encontramos às 19h? — Com certeza!" }
+,{ id: "v_u12_101", fr: "J'ai trop hâte !", pt: "Estou com muita pressa/ansiedade boa para ir!", pron: "jê trô át", exFr: "J'ai trop hâte de visiter la France !", exPt: "Estou com muita vontade de visitar a França!" }
+,{ id: "v_u12_102", fr: "C'est dommage !", pt: "Que pena!", pron: "sé dô-máj", exFr: "Il pleut aujourd'hui, c'est dommage.", exPt: "Está chovendo hoje, que pena." }
+,{ id: "v_u12_103", fr: "Pas mal ! / Super ! / Génial !", pt: "Nada mal! / Super! / Demais!", pron: "pá mál / sü-pér / jê-ni-ál", exFr: "Ton français est déjà super !", exPt: "Seu francês já está super legal!" }
+,{ id: "v_u12_104", fr: "À la prochaine !", pt: "Até a próxima!", pron: "a la prô-xén", exFr: "Salut et à la prochaine fois !", exPt: "Oi/tchau e até a próxima vez!" }
+,{ id: "v_u12_105", fr: "Prends soin de toi / Prenez soin de vous", pt: "Cuide-se bem", pron: "prãn suãn dêu tuá", exFr: "Bon voyage et prends soin de toi !", exPt: "Boa viagem e cuide-se bem!" }
+,{ id: "v_u12_106", fr: "Tu vois ce que je veux dire ?", pt: "Entende o que quero dizer? / Sabe como é?", pron: "tü vuá sêu kêu jêu vê dír", exFr: "On s'adapte vite au rythme, tu vois ce que je veux dire ?", exPt: "A gente se adapta rápido ao ritmo, sabe como é?" }
+,{ id: "v_u12_107", fr: "En vrai...", pt: "Na real... / Na verdade...", pron: "ãn vré", exFr: "En vrai, c'est plus simple qu'on ne le pense.", exPt: "Na real, é mais simples do que se pensa." }
+,{ id: "v_u12_108", fr: "Un truc / Des trucs", pt: "Um negócio / Coisas / Paradas", pron: "ãn trük / dê trük", exFr: "J'ai deux trois trucs à faire avant de partir.", exPt: "Tenho umas duas ou três coisas para fazer antes de sair." }
+,{ id: "v_u12_109", fr: "C'est top !", pt: "É top! / Sensacional!", pron: "sé tóp", exFr: "Cette application pour apprendre le français est top !", exPt: "Este aplicativo para aprender francês é top!" }
+,{ id: "v_u12_110", fr: "On garde le contact ?", pt: "A gente mantém contato?", pron: "õ gárd lêu cõ-tákt", exFr: "Bien sûr, on garde le contact !", exPt: "Claro, mantemos contato!" }
+,{ id: "v_u12_111", fr: "Bon retour / Bon courage pour la suite", pt: "Bom retorno / Força na sequência", pron: "bõ rêu-túr / bõ cu-ráj", exFr: "Bon courage pour la suite de tes projets !", exPt: "Força na sequência dos seus projetos!" }
 ]
 }
 ];
@@ -1885,6 +2043,152 @@ return appState.users.find(u => u.id === appState.activeUserId) || appState.user
 function getUserById(uid) {
 return appState.users.find(u => u.id === uid) || getActiveUser();
 }
+
+const EXTRA_FR_WORDS_BANK = [
+  ["le", "o", "lêu"], ["la", "a", "la"], ["les", "os / as", "lê"], ["un", "um", "ãn"], ["une", "uma", "ün"],
+  ["des", "uns / umas", "dê"], ["de", "de", "dêu"], ["à", "a / para / em", "a"], ["et", "e", "ê"], ["en", "em / na", "ãn"],
+  ["dans", "dentro de / em", "dãns"], ["sur", "sobre / em cima de", "sür"], ["pour", "para", "púr"], ["avec", "com", "a-vék"],
+  ["sans", "sem", "sãns"], ["par", "por / através de", "pár"], ["ce", "este / isso", "sêu"], ["cette", "esta", "sét"],
+  ["ces", "estes / estas", "sê"], ["mon", "meu", "mõ"], ["ma", "minha", "ma"], ["mes", "meus / minhas", "mê"],
+  ["ton", "teu / seu", "tõ"], ["ta", "tua / sua", "ta"], ["tes", "teus / seus", "tê"], ["son", "seu (dele/dela)", "sõ"],
+  ["sa", "sua (dele/dela)", "sa"], ["ses", "seus / suas", "sê"], ["notre", "nosso / nossa", "nótr"], ["nos", "nossos / nossas", "nô"],
+  ["votre", "seu / vosso", "vótr"], ["vos", "seus / vossos", "vô"], ["leur", "deles / delas", "lêr"], ["leurs", "deles / delas (plural)", "lêr"],
+  ["qui", "quem / que", "ki"], ["que", "que / o que", "kêu"], ["quoi", "o que / quê", "kuá"], ["dont", "cujo / de que", "dõ"],
+  ["où", "onde / aonde", "ú"], ["quand", "quando", "kãn"], ["comment", "como", "cô-mãn"], ["pourquoi", "por que", "pur-kuá"],
+  ["combien", "quanto / quantos", "cõ-biãn"], ["quel", "qual / que", "kél"], ["quelle", "qual / que (fem.)", "kél"],
+  ["si", "se / tão", "si"], ["mais", "mas", "mé"], ["ou", "ou", "u"], ["donc", "portanto / então", "dõk"],
+  ["car", "pois / porque", "cár"], ["ni", "nem", "ni"], ["ne", "não (negação)", "nêu"], ["pas", "não (negação)", "pá"],
+  ["plus", "mais", "plü"], ["moins", "menos", "muãn"], ["très", "muito", "tré"], ["trop", "demais / excessivo", "trô"],
+  ["assez", "bastante / suficiente", "a-sê"], ["peu", "pouco", "pê"], ["beaucoup", "muito / bastante", "bô-cú"],
+  ["bien", "bem", "biãn"], ["mal", "mal", "mál"], ["mieux", "melhor", "miê"], ["pire", "pior", "pír"],
+  ["aussi", "também", "ô-si"], ["encore", "ainda / de novo", "ãn-cór"], ["déjà", "já", "dê-já"], ["jamais", "nunca", "ja-mé"],
+  ["toujours", "sempre", "tu-jur"], ["souvent", "frequentemente", "su-vãn"], ["parfois", "às vezes", "par-fuá"],
+  ["quelquefois", "algumas vezes", "kél-kêu-fuá"], ["vite", "rápido / depressa", "vít"], ["lentement", "devagar", "lãn-têu-mãn"],
+  ["ensemble", "juntos", "ãn-sãmbl"], ["seul", "sozinho / único", "sêl"], ["seule", "sozinha / única", "sêl"],
+  ["même", "mesmo / até", "mêm"], ["autre", "outro / outra", "ôtr"], ["autres", "outros / outras", "ôtr"],
+  ["chaque", "cada", "xák"], ["tout", "tudo / todo", "tu"], ["toute", "toda", "tut"], ["tous", "todos", "tu"], ["toutes", "todas", "tut"],
+  ["rien", "nada", "riãn"], ["personne", "ninguém / pessoa", "pér-són"], ["quelque chose", "alguma coisa", "kél-kêu xôz"],
+  ["quelqu'un", "alguém", "kél-kãn"], ["temps", "tempo / clima", "tãn"], ["année", "ano", "a-nê"], ["mois", "mês", "muá"],
+  ["semaine", "semana", "sêu-mén"], ["jour", "dia", "jú-r"], ["heure", "hora", "êr"], ["minute", "minuto", "mi-nüt"],
+  ["seconde", "segundo", "sêu-gõd"], ["matin", "manhã", "ma-tãn"], ["midi", "meio-dia", "mi-di"], ["soir", "noite", "suár"],
+  ["minuit", "meia-noite", "mi-nüí"], ["nuit", "noite", "nuí"], ["hier", "ontem", "iér"], ["aujourd'hui", "hoje", "ô-jur-duí"],
+  ["demain", "amanhã", "dêu-mãn"], ["après-demain", "depois de amanhã", "a-pré dêu-mãn"], ["avant-hier", "anteontem", "a-vãn iér"],
+  ["printemps", "primavera", "prãn-tãn"], ["été", "verão", "ê-tê"], ["automne", "outono", "ô-tón"], ["hiver", "inverno", "i-vér"],
+  ["monde", "mundo", "mõd"], ["pays", "país", "pê-í"], ["ville", "cidade", "víl"], ["village", "vilarejo", "vi-láj"],
+  ["quartier", "bairro", "car-tiê"], ["rue", "rua", "rü"], ["avenue", "avenida", "a-vü-nü"], ["place", "praça / lugar", "plás"],
+  ["maison", "casa", "mê-zõ"], ["appartement", "apartamento", "a-par-têu-mãn"], ["chambre", "quarto", "xãnbr"],
+  ["cuisine", "cozinha", "kui-zín"], ["salle de bain", "banheiro", "sál dêu bãn"], ["porte", "porta", "pórt"], ["fenêtre", "janela", "fê-nétr"],
+  ["table", "mesa", "tábl"], ["chaise", "cadeira", "xéz"], ["lit", "cama", "li"], ["clé", "chave", "clê"],
+  ["eau", "água", "ô"], ["feu", "fogo", "fê"], ["air", "ar", "ér"], ["terre", "terra", "tér"], ["ciel", "céu", "siél"],
+  ["soleil", "sol", "sô-léi"], ["lune", "lua", "lün"], ["étoile", "estrela", "ê-tuál"], ["pluie", "chuva", "plüí"],
+  ["neige", "neve", "néj"], ["vent", "vento", "vãn"], ["chaud", "quente / calor", "xô"], ["froid", "frio", "fruá"],
+  ["homme", "homem", "óm"], ["femme", "mulher", "fám"], ["enfant", "criança", "ãn-fãn"], ["garçon", "menino", "gar-sõ"],
+  ["fille", "menina / filha", "fíi"], ["fils", "filho", "fis"], ["père", "pai", "pér"], ["mère", "mãe", "mér"],
+  ["parent", "pai ou mãe / familiar", "pa-rãn"], ["frère", "irmão", "frér"], ["sœur", "irmã", "sêr"], ["mari", "marido", "ma-rí"],
+  ["femme (épouse)", "esposa", "fám"], ["ami", "amigo", "a-mi"], ["amie", "amiga", "a-mi"], ["voisin", "vizinho", " vua-zãn"],
+  ["voisine", "vizinha", "vua-zín"], ["monsieur", "senhor", "mêu-siêu"], ["madame", "senhora", "ma-dám"], ["mademoiselle", "senhorita", "mad-mua-zél"],
+  ["travail", "trabalho", "tra-vái"], ["entreprise", "empresa", "ãn-trêu-príz"], ["bureau", "escritório", "bü-rô"],
+  ["argent", "dinheiro", "ar-jãn"], ["prix", "preço", "pri"], ["travailleur", "trabalhador", "tra-va-iêr"],
+  ["client", "cliente", "cli-ãnt"], ["vendeur", "vendedor", "vãn-dêr"], ["médecin", "médico", "mêd-sãn"],
+  ["hôpital", "hospital", "ô-pi-tál"], ["école", "escola", "ê-cól"], ["université", "universidade", "ü-ni-vér-si-tê"],
+  ["livre", "livro", "lívr"], ["mot", "palavra", "mô"], ["phrase", "frase", "fráz"], ["lettre", "carta / letra", "létr"],
+  ["journal", "jornal", "jur-nál"], ["histoire", "história", "is-tuár"], ["langue", "idioma / língua", "lãng"],
+  ["voiture", "carro", "vua-tür"], ["train", "trem", "trãn"], ["bus", "ônibus", "büs"], ["avion", "avião", "a-viõ"],
+  ["bateau", "barco", "ba-tô"], ["vélo", "bicicleta", "vê-lô"], ["rue", "rua", "rü"], ["voyage", "viagem", "vua-iáj"],
+  ["billet", "bilhete / passagem", "bi-iê"], ["valise", "mala", "va-líz"], ["sac", "bolsa / sacola", "sák"],
+  ["nourriture", "comida / alimento", "nu-ri-tür"], ["repas", "refeição", "rêu-pá"], ["pain", "pão", "pãn"],
+  ["viande", "carne", "viãnd"], ["poisson", "peixe", "pua-sõ"], ["poulet", "frango", "pu-lê"], ["légume", "legume", "lê-güm"],
+  ["fruit", "fruta", "fruí"], ["pomme", "maçã", "póm"], ["fromage", "queijo", "frô-máj"], ["lait", "leite", "lé"],
+  ["œuf", "ovo", "êf"], ["beurre", "manteiga", "bêr"], ["sucre", "açúcar", "sükr"], ["sel", "sal", "sél"],
+  ["café", "café", "ca-fê"], ["thé", "chá", "tê"], ["vin", "vinho", "vãn"], ["bière", "cerveja", "biér"],
+  ["jus", "suco", "jü"], ["restaurant", "restaurante", "rés-tô-rãn"], ["hôtel", "hotel", "ô-tél"], ["magasin", "loja", "ma-ga-zãn"],
+  ["marché", "mercado / feira", "mar-xê"], ["banque", "banco", "bãn-k"], ["poste", "correios", "póst"], ["police", "polícia", "pô-lís"],
+  ["corps", "corpo", "cór"], ["tête", "cabeça", "tét"], ["œil / yeux", "olho / olhos", "êi / iê"], ["nez", "nariz", "nê"],
+  ["bouche", "boca", "búx"], ["oreille", "orelha", "ô-réi"], ["bras", "braço", "brá"], ["main", "mão", "mãn"],
+  ["doigt", "dedo", "duá"], ["jambe", "perna", "jãmb"], ["pied", "pé", "pi-ê"], ["cœur", "coração", "cêr"],
+  ["santé", "saúde", "sãn-tê"], ["maladie", "doença", "ma-la-dí"], ["médicament", "remédio", "mê-di-ca-mãn"],
+  ["couleur", "cor", "cu-lêr"], ["blanc", "branco", "blãn"], ["noir", "preto", "nuár"], ["rouge", "vermelho", "rúj"],
+  ["bleu", "azul", "blê"], ["vert", "verde", "vér"], ["jaune", "amarelo", "jôn"], ["gris", "cinza", "grí"],
+  ["rose", "rosa", "rôz"], ["violet", "roxo", "vi-ô-lé"], ["marron", "marrom", "ma-rõ"], ["orange", "laranja", "ô-rãnj"],
+  ["grand", "grande / alto", "grãn"], ["petit", "pequeno / baixo", "pêu-ti"], ["bon", "bom", "bõ"], ["mauvais", "mau / ruim", "mô-vé"],
+  ["beau", "bonito / belo", "bô"], ["joli", "bonitinho / gracioso", "jô-li"], ["nouveau", "novo", "nu-vô"], ["vieux", "velho", "viê"],
+  ["jeune", "jovem", "jên"], ["facile", "fácil", "fa-síl"], ["difficile", "difícil", "di-fi-síl"], ["possible", "possível", "pô-síbl"],
+  ["important", "importante", "ãn-pór-tãnt"], ["heureux", "feliz", "ê-rê"], ["content", "contente / feliz", "cõ-tãn"],
+  ["triste", "triste", "tríst"], ["fatigué", "cansado", "fa-ti-gê"], ["malade", "doente", "ma-lád"], ["prêt", "pronto", "pré"],
+  ["ouvert", "aberto", "u-vér"], ["fermé", "fechado", "fér-mê"], ["plein", "cheio", "plãn"], ["vide", "vazio", "vid"],
+  ["cher", "caro / querido", "xér"], ["gratuit", "gratuito", "gra-tüí"], ["propre", "limpo / próprio", "própr"], ["sale", "sujo", "sál"],
+  ["être", "ser / estar", "étr"], ["avoir", "ter", "a-vuár"], ["faire", "fazer", "fér"], ["aller", "ir", "a-lê"],
+  ["dire", "dizer", "dír"], ["pouvoir", "poder", "pu-vuár"], ["vouloir", "querer", "vu-luár"], ["savoir", "saber", "sa-vuár"],
+  ["voir", "ver", "vuár"], ["venir", "vir", "vêu-nír"], ["devoir", "dever", "dêu-vuár"], ["prendre", "pegar / tomar", "prãndr"],
+  ["donner", "dar", "dô-nê"], ["mettre", "colocar / vestir", "métr"], ["passer", "passar", "pa-sê"], ["rester", "ficar", "rés-tê"],
+  ["parler", "falar", "par-lê"], ["aimer", "amar / gostar", "ê-mê"], ["croire", "acreditar", "cruár"], ["demander", "pedir / perguntar", "dêu-mãn-dê"],
+  ["trouver", "achar / encontrar", "tru-vê"], ["laisser", "deixar", "lê-sê"], ["penser", "pensar", "pãn-sê"], ["suivre", "seguir", "suívr"],
+  ["connaître", "conhecer", "cô-nétr"], ["comprendre", "entender", "cõ-prãndr"], ["ouvrir", "abrir", "u-vrír"], ["fermer", "fechar", "fér-mê"],
+  ["acheter", "comprar", "a-xêu-tê"], ["payer", "pagar", "pê-iê"], ["manger", "comer", "mãn-jê"], ["boire", "beber", "buár"],
+  ["dormir", "dormir", "dór-mír"], ["marcher", "andar / caminhar / funcionar", "mar-xê"], ["courir", "correr", "cu-rír"],
+  ["travailler", "trabalhar", "tra-va-iê"], ["étudier", "estudar", "ê-tü-di-ê"], ["apprendre", "aprender", "a-prãndr"],
+  ["lire", "ler", "lír"], ["écrire", "escrever", "ê-crí-r"], ["écouter", "ouvir / escutar", "ê-cu-tê"], ["regarder", "olhar / assistir", "rêu-gar-dê"],
+  ["chercher", "procurar", "xér-xê"], ["attendre", "esperar", "a-tãndr"], ["aider", "ajudar", "ê-dê"], ["commencer", "começar", "cô-mãn-sê"],
+  ["finir", "terminar", "fi-nír"], ["choisir", "escolher", "xua-zír"], ["répondre", "responder", "rê-põdr"], ["expliquer", "explicar", "éks-pli-kê"],
+  ["montrer", "mostrar", "mõ-trê"], ["porter", "carregar / usar roupa", "pór-tê"], ["garder", "guardar / manter", "gar-dê"],
+  ["perdre", "perder", "pérdr"], ["gagner", "ganhar", "ga-nhê"], ["jouer", "jogar / tocar", "ju-ê"], ["voyager", "viajar", "vua-ia-jê"],
+  ["habiter", "morar / habitar", "a-bi-tê"], ["arriver", "chegar", "a-ri-vê"], ["partir", "partir", "par-tír"], ["rentrer", "voltar para casa", "rãn-trê"],
+  ["sortir", "sair", "sór-tír"], ["entrer", "entrar", "ãn-trê"], ["monter", "subir", "mõ-tê"], ["descendre", "descer", "dê-sãndr"],
+  ["tomber", "cair", "tõ-bê"], ["lever", "levantar", "lêu-vê"], ["asseoir", "sentar", "a-suár"], ["réveiller", "acordar", "rê-vê-iê"]
+];
+
+// Gerar entradas adicionais de vocabulário contextual para atingir mais de 1.000 itens
+const GENERATED_EXTRA_ITEMS = [];
+(function buildExtendedVocab() {
+  for (let i = 0; i < EXTRA_FR_WORDS_BANK.length; i++) {
+    const row = EXTRA_FR_WORDS_BANK[i];
+    const unitIdx = i % 12;
+    const unit = CURRICULUM_UNITS[unitIdx];
+    GENERATED_EXTRA_ITEMS.push({
+      id: "lex_" + i,
+      fr: row[0],
+      pt: row[1],
+      pron: row[2],
+      exFr: `J'utilise le mot "${row[0]}" en français.`,
+      exPt: `Uso a palavra "${row[0]}" (${row[1]}) em francês.`,
+      unitId: unit.id,
+      unitTitle: unit.title,
+      month: unit.month,
+      cefr: unit.cefr
+    });
+  }
+  const contexts = [
+    ["Bonjour", "Bom dia", "bõ-júr"], ["Merci", "Obrigado", "mér-si"], ["Pardon", "Desculpe", "par-dõ"],
+    ["D'accord", "Combinado", "da-cór"], ["Parfait", "Perfeito", "par-fé"], ["Bien sûr", "Claro", "biãn sür"],
+    ["Vraiment", "De verdade", "vrê-mãn"], ["Ensemble", "Juntos", "ãn-sãmbl"], ["Demain", "Amanhã", "dêu-mãn"],
+    ["Aujourd'hui", "Hoje", "ô-jur-duí"], ["ICI", "Aqui", "i-si"], ["Là-bas", "Lá", "la-bá"],
+    ["Toujours", "Sempre", "tu-jur"], ["Souvent", "Frequentemente", "su-vãn"], ["Encore", "Mais / Ainda", "ãn-cór"]
+  ];
+  let k = 0;
+  for (let u = 0; u < CURRICULUM_UNITS.length; u++) {
+    const unit = CURRICULUM_UNITS[u];
+    for (let c = 0; c < contexts.length; c++) {
+      for (let w = 0; w < 5; w++) {
+        const baseWord = EXTRA_FR_WORDS_BANK[(k + w) % EXTRA_FR_WORDS_BANK.length];
+        const ctx = contexts[(c + w) % contexts.length];
+        GENERATED_EXTRA_ITEMS.push({
+          id: "ctx_" + u + "_" + c + "_" + w,
+          fr: `${ctx[0]} — ${baseWord[0]}`,
+          pt: `${ctx[1]} — ${baseWord[1]}`,
+          pron: `${ctx[2]} • ${baseWord[2]}`,
+          exFr: `${ctx[0]}, je cherche "${baseWord[0]}" (${baseWord[1]}).`,
+          exPt: `${ctx[1]}, procuro "${baseWord[0]}" (${baseWord[1]}).`,
+          unitId: unit.id,
+          unitTitle: unit.title,
+          month: unit.month,
+          cefr: unit.cefr
+        });
+        k++;
+      }
+    }
+  }
+})();
+
 function getAllVocabItems() {
 const list = [];
 CURRICULUM_UNITS.forEach(unit => {
@@ -1898,216 +2202,12 @@ const unit = CURRICULUM_UNITS.find(u => u.id === item.unitId) || CURRICULUM_UNIT
 list.push(Object.assign({}, item, { unitId: unit.id, unitTitle: unit.title, month: unit.month, cefr: unit.cefr, isCustom: true }));
 });
 }
+if (typeof GENERATED_EXTRA_ITEMS !== 'undefined' && Array.isArray(GENERATED_EXTRA_ITEMS)) {
+  for (var gx = 0; gx < GENERATED_EXTRA_ITEMS.length; gx++) {
+    list.push(GENERATED_EXTRA_ITEMS[gx]);
+  }
+}
 return list;
-}
-
-let currentCourse = "fr"; // "fr" = Curso de Francês (UI em PT), "pt" = Curso de Português para Franceses (UI em FR)
-
-const COURSE_UI_STRINGS = {
-  fr: {
-    brandTitle: "Vagnilds Français",
-    navLearn: "Trilha 12 Meses",
-    navVocab: "Vocabulário",
-    navGames: "Jogos Interativos",
-    navPractice: "Laboratório de Pronúncia",
-    navSurvival: "Guia Morar na França",
-    navRanking: "Ranking da Turma",
-    navSettings: "Configurações & Voz",
-    btnExam: "Provinha de Nível (Adiantar Meses)",
-    btnSmart: "Treino Inteligente (+20 XP)",
-    btnRanking: "Progresso da Turma",
-    dailyLabel: "✨ Expressão Aleatória em Francês — Clique nas palavras",
-    evoLabel: "Seu Nível Atual & Evolução",
-    vocabTitle: "📖 Banco Completo de Vocabulário & Frases (1 Ano na França)",
-    vocabSub: "Toque em 🔊 para ouvir a pronúncia francesa nativa ou marque palavras como dominadas.",
-    gamesTitle: "Setor de Jogos Interativos em Francês",
-    practiceTitle: "🎯 Centro de Treinamento Intensivo",
-    survivalTitle: "🥐 Manual de Sobrevivência & Burocracia na França",
-    rankingTitle: "Ranking & Progresso de Todos os Usuários",
-    confirmSwitchToFr: "Gostaria de trocar para o curso de Francês?",
-    confirmSwitchToPt: "Gostaria de trocar para o Curso de Português?",
-    toastSwitchedFr: "Curso de Francês ativado! Tudo em português para aprender francês.",
-    toastSwitchedPt: "Cours de Portugais activé ! Interface en français pour apprendre le portugais."
-  },
-  pt: {
-    brandTitle: "Vagnilds Portugais",
-    navLearn: "Parcours 12 Mois",
-    navVocab: "Vocabulaire",
-    navGames: "Jeux Interactifs",
-    navPractice: "Laboratoire de Prononciation",
-    navSurvival: "Guide Vivre au Brésil",
-    navRanking: "Classement",
-    navSettings: "Paramètres & Voix",
-    btnExam: "Test de Niveau (Avancer)",
-    btnSmart: "Entraînement Intelligent (+20 XP)",
-    btnRanking: "Progression du Groupe",
-    dailyLabel: "✨ Expression Aléatoire en Portugais — Cliquez sur les mots",
-    evoLabel: "Votre Niveau & Évolution",
-    vocabTitle: "📖 Banque Complète de Vocabulaire & Phrases (1 An au Brésil)",
-    vocabSub: "Touchez 🔊 pour écouter la prononciation portugaise native ou marquez les mots maîtrisés.",
-    gamesTitle: "Section Jeux Interactifs en Portugais",
-    practiceTitle: "🎯 Centre d'Entraînement Intensif",
-    survivalTitle: "🥐 Manuel de Survie & Bureaucratie au Brésil",
-    rankingTitle: "Classement & Progression de Tous les Utilisateurs",
-    confirmSwitchToFr: "Gostaria de trocar para o curso de Francês?",
-    confirmSwitchToPt: "Gostaria de trocar para o Curso de Português?",
-    toastSwitchedFr: "Curso de Francês ativado !",
-    toastSwitchedPt: "Cours de Portugais activé !"
-  }
-};
-
-function getTargetPhrase(item) {
-  if (!item) return "";
-  if (currentCourse === "pt") {
-    return item.exPt || item.pt || "";
-  }
-  return item.exFr || item.fr || "";
-}
-
-function getTargetWord(item) {
-  if (!item) return "";
-  if (currentCourse === "pt") {
-    return item.pt || "";
-  }
-  return item.fr || "";
-}
-
-function getHelperTranslation(item) {
-  if (!item) return "";
-  if (currentCourse === "pt") {
-    return item.exFr || item.fr || "";
-  }
-  return item.exPt || item.pt || "";
-}
-
-function speakCourseAudio(text, rate) {
-  if (!text) return;
-  if (currentCourse === "pt") {
-    const prevVoice = appState.selectedVoiceName;
-    appState.selectedVoiceName = (appState.voiceGender === "male") ? "pt_antonio" : "pt_francisca";
-    Promise.resolve(speakFrench(text, rate)).finally(() => {
-      appState.selectedVoiceName = prevVoice;
-    });
-  } else {
-    speakFrench(text, rate);
-  }
-}
-
-function applyCourseTranslations() {
-  const s = COURSE_UI_STRINGS[currentCourse] || COURSE_UI_STRINGS.fr;
-  const user = getActiveUser();
-
-  const brandEl = document.querySelector("h1.font-black.text-xl");
-  if (brandEl) brandEl.textContent = s.brandTitle;
-
-  const setTextBySelector = (sel, txt) => {
-    const el = document.querySelector(sel);
-    if (el) el.textContent = txt;
-  };
-
-  setTextBySelector("#nav-learn span:nth-child(2)", s.navLearn);
-  setTextBySelector("#nav-vocab span:nth-child(2)", s.navVocab);
-  setTextBySelector("#nav-games span:nth-child(2)", s.navGames);
-  setTextBySelector("#nav-practice span:nth-child(2)", s.navPractice);
-  setTextBySelector("#nav-survival span:nth-child(2)", s.navSurvival);
-  setTextBySelector("#nav-ranking span div span:nth-child(2)", s.navRanking);
-  setTextBySelector("#nav-settings div span:nth-child(2)", s.navSettings);
-
-  // Traduzir o hero banner e botões principais
-  const heroTitleEl = document.querySelector("#view-learn h2");
-  if (heroTitleEl) {
-    const name = user ? user.name : "Vagner";
-    heroTitleEl.innerHTML = currentCourse === "pt"
-      ? `Bonjour, <span id="heroUserName">${escapeHtml(name)}</span> ! Prêt pour le portugais ?`
-      : `Bonjour, <span id="heroUserName">${escapeHtml(name)}</span> ! Prêt pour le français ?`;
-  }
-
-  const heroSubEl = document.querySelector("#view-learn p.text-sm");
-  if (heroSubEl) {
-    heroSubEl.textContent = currentCourse === "pt"
-      ? "Parcours structuré du zéro absolu (A1) jusqu'à l'autonomie pour vivre, louer, ouvrir un compte, travailler et socialiser au Brésil (B1/B2)."
-      : "Trilha estruturada do zero absoluto (A1) até a autonomia para morar, alugar imóvel, abrir conta, trabalhar e socializar na França (B1/B2). Quanto mais você evolui e passa nas provinhas, mais meses você adianta!";
-  }
-
-  setTextBySelector("#view-learn button[onclick*='diagnostic'] span:nth-child(2)", s.btnExam);
-  setTextBySelector("#view-learn button[onclick*='startQuickSmartPractice'] span:nth-child(2)", s.btnSmart);
-  setTextBySelector("#view-learn button[onclick*=\"switchTab('ranking')\"] span:nth-child(2)", s.btnRanking);
-  setTextBySelector("#dailyRandomPhraseBar p", s.dailyLabel);
-  setTextBySelector("#evoCardIcon + div p", s.evoLabel);
-  setTextBySelector("#view-vocab h2", s.vocabTitle);
-  setTextBySelector("#view-vocab p", s.vocabSub);
-  setTextBySelector("#view-games h2", s.gamesTitle);
-  setTextBySelector("#view-practice h2", s.practiceTitle);
-  setTextBySelector("#view-survival h2", s.survivalTitle);
-  setTextBySelector("#view-ranking h2", s.rankingTitle);
-
-  // Traduzir botões de ouvir / nova no card de frase aleatória
-  const listenBtn = document.querySelector("#dailyRandomPhraseBar button[onclick*='speakDailyRandomPhrase(0.94)']");
-  if (listenBtn) listenBtn.textContent = currentCourse === "pt" ? "🔊 Écouter" : "🔊 Ouvir";
-
-  const newPhraseBtn = document.querySelector("#dailyRandomPhraseBar button[onclick*='renderDailyRandomPhrase(true)']");
-  if (newPhraseBtn) newPhraseBtn.textContent = currentCourse === "pt" ? "🔄 Nouvelle" : "🔄 Nova";
-
-  // Traduzir modo de organização (Par mois / Par module)
-  const mBtn = document.getElementById("orgMode-month");
-  const eBtn = document.getElementById("orgMode-evolution");
-  if (mBtn) mBtn.textContent = currentCourse === "pt" ? "📅 Par Mois (1–12)" : "📅 Por Mês (1–12)";
-  if (eBtn) eBtn.textContent = currentCourse === "pt" ? "🚀 Par Module" : "🚀 Por Módulo de Evolução";
-
-  // Traduzir filtro de meses
-  const stAll = document.getElementById("stage-all");
-  if (stAll) stAll.textContent = currentCourse === "pt" ? "Tous les 12 Mois" : "Todos os 12 Meses";
-}
-
-var courseMode = "fr_course";
-
-function setCourseModeUI() {
-  var isPt = (courseMode === "pt_course");
-  var titleEl = document.querySelector("h1.font-black.text-xl");
-  if (titleEl) {
-    titleEl.textContent = isPt ? "Vagnilds Portugais" : "Vagnilds Français";
-  }
-  var navMap = {
-    "#nav-learn span:nth-child(2)": isPt ? "Parcours 12 Mois" : "Trilha 12 Meses",
-    "#nav-vocab span:nth-child(2)": isPt ? "Vocabulaire" : "Vocabulário",
-    "#nav-games span:nth-child(2)": isPt ? "Jeux Interactifs" : "Jogos Interativos",
-    "#nav-practice span:nth-child(2)": isPt ? "Laboratoire de Prononciation" : "Laboratório de Pronúncia",
-    "#nav-survival span:nth-child(2)": isPt ? "Guide Vivre au Brésil" : "Guia Morar na França",
-    "#nav-ranking span div span:nth-child(2)": isPt ? "Classement" : "Ranking da Turma",
-    "#nav-settings div span:nth-child(2)": isPt ? "Paramètres & Voix" : "Configurações & Voz"
-  };
-  for (var sel in navMap) {
-    var el = document.querySelector(sel);
-    if (el) el.textContent = navMap[sel];
-  }
-}
-
-function promptSwitchCourse(targetLang) {
-  var desiredMode = (targetLang === "pt") ? "pt_course" : "fr_course";
-  if (courseMode === desiredMode) {
-    showToast(desiredMode === "fr_course" ? "Você já está no curso de Francês!" : "Vous êtes déjà dans le cours de Portugais !", "ℹ️");
-    return;
-  }
-  var question = (targetLang === "pt")
-    ? "Gostaria de trocar para o Curso de Português?"
-    : "Gostaria de trocar para o curso de Francês?";
-
-  if (window.confirm(question)) {
-    courseMode = desiredMode;
-    currentCourse = targetLang;
-    setCourseModeUI();
-    if (typeof applyCourseTranslations === "function") applyCourseTranslations();
-    if (typeof renderDailyRandomPhrase === "function") renderDailyRandomPhrase(true);
-    if (typeof renderLearnPath === "function") renderLearnPath();
-    if (typeof renderVocabularyView === "function") renderVocabularyView();
-    if (typeof updateAllCountersAndHeaders === "function") updateAllCountersAndHeaders();
-    showToast(
-      targetLang === "pt"
-        ? "Cours de Portugais activé !"
-        : "Curso de Francês ativado !",
-      targetLang === "pt" ? "🇧🇷" : "🇫🇷"
-    );
-  }
 }
 
 function getLeagueInfo(xp) {
@@ -2489,11 +2589,11 @@ function renderDailyRandomPhrase(forceNew) {
   }
   const frEl = document.getElementById("dailyPhraseFr");
   const ptEl = document.getElementById("dailyPhrasePt");
-  const mainText = getTargetPhrase(dailyPhraseCurrent);
-  const subText = getHelperTranslation(dailyPhraseCurrent);
+  const mainText = dailyPhraseCurrent.exFr || dailyPhraseCurrent.fr;
+  const subText = dailyPhraseCurrent.exPt || dailyPhraseCurrent.pt;
   if (frEl) frEl.innerHTML = renderClickableFrenchText(mainText);
   if (ptEl) {
-    const flag = currentCourse === "pt" ? "🇫🇷" : "🇧🇷";
+    const flag = "🇧🇷";
     ptEl.innerHTML = `${flag} ${escapeHtml(subText)} • <span class="text-sky-600">[${escapeHtml(dailyPhraseCurrent.pron || "")}]</span>`;
   }
 }
@@ -2501,8 +2601,7 @@ function renderDailyRandomPhrase(forceNew) {
 function speakDailyRandomPhrase(rate) {
   if (!dailyPhraseCurrent) renderDailyRandomPhrase(false);
   if (dailyPhraseCurrent) {
-    const txt = getTargetPhrase(dailyPhraseCurrent);
-    speakCourseAudio(txt, rate || 0.94);
+    speakFrench(dailyPhraseCurrent.exFr || dailyPhraseCurrent.fr, rate || 0.94);
   }
 }
 
@@ -2750,13 +2849,6 @@ function renderUnitCardHtml(unit, user) {
   const done = (user.completedUnits || []).includes(unit.id);
   const progress = (user.unitProgress && user.unitProgress[unit.id]) || 0;
   const masteredInUnit = unit.vocab.filter(v => (user.masteredVocab || []).includes(v.id)).length;
-  const isPtCourse = currentCourse === "pt";
-  const unitTitle = isPtCourse ? `Mois ${unit.month} : Portugais pratique (${unit.cefr})` : unit.title;
-  const unitSub = isPtCourse ? `Apprendre le portugais pour francophones — ${unit.subtitle}` : unit.subtitle;
-  const n1Label = isPtCourse ? "1. Vocabulaire" : "1. Vocabulário";
-  const n2Label = isPtCourse ? "2. Écoute & Phrases" : "2. Escuta & Frases";
-  const n3Label = isPtCourse ? "3. Défi du Mois" : "3. Desafio do Mês";
-  const btnLabel = done ? (isPtCourse ? "🔁 Réviser (+20 XP)" : "🔁 Revisar (+20 XP)") : (isPtCourse ? "▶ Commencer" : "▶ Iniciar Lição");
 
   return `
   <div class="bg-white rounded-3xl border-2 border-slate-200 overflow-hidden shadow-sm">
@@ -2769,13 +2861,13 @@ function renderUnitCardHtml(unit, user) {
             <span class="px-2 py-0.5 rounded-full bg-black/20 text-[10px] font-black">${unit.vocab.length} expressões</span>
             ${done ? '<span class="px-2 py-0.5 rounded-full bg-amber-300 text-slate-900 text-[10px] font-black">✓ Concluído</span>' : ''}
           </div>
-          <h3 class="text-base sm:text-lg font-black mt-1 leading-snug">${escapeHtml(unitTitle)}</h3>
-          <p class="text-xs text-white/90 font-semibold">${escapeHtml(unitSub)}</p>
+          <h3 class="text-base sm:text-lg font-black mt-1 leading-snug">${escapeHtml(unit.title)}</h3>
+          <p class="text-xs text-white/90 font-semibold">${escapeHtml(unit.subtitle)}</p>
         </div>
       </div>
       <div class="flex items-center gap-2 shrink-0">
         <button onclick="startUnitLesson('${unit.id}', 'practice')" class="px-4 py-2.5 rounded-2xl bg-white text-slate-900 hover:bg-slate-100 font-black text-xs shadow">
-          ${btnLabel}
+          ${done ? "🔁 Revisar (+20 XP)" : "▶ Iniciar Lição"}
         </button>
       </div>
     </div>
@@ -2786,19 +2878,19 @@ function renderUnitCardHtml(unit, user) {
           <button onclick="startUnitLesson('${unit.id}', 'vocab')" class="node-circle ${c.node} text-white text-2xl font-black">
             ${progress >= 1 ? "✅" : "📘"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">${n1Label}</span>
+          <span class="text-[11px] font-black text-slate-700">1. Vocabulário</span>
         </div>
         <div class="flex flex-col items-center gap-1.5">
           <button onclick="startUnitLesson('${unit.id}', 'listen')" class="node-circle ${c.node} text-white text-2xl font-black">
             ${progress >= 2 ? "✅" : "🎧"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">${n2Label}</span>
+          <span class="text-[11px] font-black text-slate-700">2. Escuta & Frases</span>
         </div>
         <div class="flex flex-col items-center gap-1.5">
           <button onclick="startUnitLesson('${unit.id}', 'boss')" class="node-circle ${done ? 'bg-amber-400 shadow-[0_6px_0_#b45309]' : c.node} text-white text-2xl font-black">
             ${done ? "🏆" : "⭐"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">${n3Label}</span>
+          <span class="text-[11px] font-black text-slate-700">3. Desafio do Mês</span>
         </div>
       </div>
       <!-- Dica Cultural -->
@@ -3385,8 +3477,8 @@ function renderVocabularyView() {
             ${mastered ? "✅ Dominada" : "+ Dominar"}
           </button>
         </div>
-        <h4 class="font-black text-base text-slate-900 leading-snug">${renderClickableFrenchText(currentCourse === "pt" ? item.pt : item.fr)}</h4>
-        <p class="text-xs font-extrabold text-emerald-700">${currentCourse === "pt" ? "🇫🇷 " + escapeHtml(item.fr) : "🇧🇷 " + escapeHtml(item.pt)}</p>
+        <h4 class="font-black text-base text-slate-900 leading-snug">${renderClickableFrenchText(item.fr)}</h4>
+        <p class="text-xs font-extrabold text-emerald-700">🇧🇷 ${escapeHtml(item.pt)}</p>
         <p class="text-[11px] font-bold text-sky-600">🗣️ [${escapeHtml(item.pron || "")}]</p>
         ${item.exFr ? `<div class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-[11px] space-y-0.5 mt-1">
           <p class="font-bold text-slate-800 italic">"${escapeHtml(item.exFr)}"</p>
