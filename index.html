@@ -281,9 +281,16 @@ box-shadow: 0 0 0 #cbd5e1;
 <div class="p-4 border-b-2 border-slate-100 shrink-0">
 <div class="flex items-center justify-between mb-3">
 <div onclick="handleBrandEasterEggClick()" class="flex items-center gap-2.5 cursor-pointer select-none group" title="Vagnilds Français">
-<div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 via-white to-red-600 p-0.5 shadow-sm flex items-center justify-center group-active:scale-95 transition">
+<div class="flex items-center gap-2">
+<div onclick="event.stopPropagation(); promptSwitchCourse('fr')" class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 via-white to-red-600 p-0.5 shadow-sm flex items-center justify-center cursor-pointer hover:scale-105 transition" title="Curso de Francês">
 <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 3 2" aria-label="Bandeira da França"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>
+<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 3 2" aria-label="França"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>
+</div>
+</div>
+<div onclick="event.stopPropagation(); promptSwitchCourse('pt')" class="w-10 h-10 rounded-2xl bg-gradient-to-br from-green-600 via-yellow-400 to-blue-700 p-0.5 shadow-sm flex items-center justify-center cursor-pointer hover:scale-105 transition" title="Curso de Português para Franceses">
+<div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
+<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 20 14" aria-label="Brasil"><rect width="20" height="14" fill="#009b3a"/><polygon points="10,1 19,7 10,13 1,7" fill="#fedf00"/><circle cx="10" cy="7" r="3.5" fill="#002776"/></svg>
+</div>
 </div>
 </div>
 <div>
@@ -291,7 +298,8 @@ box-shadow: 0 0 0 #cbd5e1;
 <h1 class="font-black text-xl tracking-tight text-emerald-600 leading-none">Vagnilds Français</h1>
 <span id="adminUnlockedBadge" class="hidden text-[9px] font-black px-1.5 py-0.5 rounded bg-rose-600 text-white uppercase">ADMIN</span>
 </div>
-<p class="text-[11px] font-bold text-slate-400">Français avec Vagnilds • Le Français</p>
+<!-- Oculto a pedido do usuário -->
+<p class="hidden text-[11px] font-bold text-slate-400">Français avec Vagnilds • Le Français</p>
 </div>
 </div>
 <button onclick="toggleMobileSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:bg-slate-100">✕</button>
@@ -2018,7 +2026,7 @@ document.addEventListener("pointerdown", (e) => {
 const btn = e.target.closest("button, .node-circle, .word-chip");
 if (!btn || btn.disabled) return;
 const onclickAttr = btn.getAttribute("onclick") || "";
-if (/speakFrench|speakCustomInput|speakWordFromBalloon|testSelectedFrenchVoice|playSoundEffect|pickScrambleChar|removeScrambleBuiltChar|flipMemoryCard|answerSpeedQuestion|answerBistroScenario|selectMcOption|addWordToSentence|removeBuiltWord|clickMatchLeft|clickMatchRight|handleLessonPrimaryAction|nextRandomFlashcard|flipCurrentFlashcard|speakDailyRandomPhrase|speakCurrentFlashcard/.test(onclickAttr)) return;
+if (/speak|Audio|tts|Voice|Sound|Play|speakFrench|speakCustomInput|speakWordFromBalloon|testSelectedFrenchVoice|playSoundEffect|pickScrambleChar|removeScrambleBuiltChar|flipMemoryCard|answerSpeedQuestion|answerBistroScenario|selectMcOption|addWordToSentence|removeBuiltWord|clickMatchLeft|clickMatchRight|handleLessonPrimaryAction|nextRandomFlashcard|flipCurrentFlashcard|speakDailyRandomPhrase|speakCurrentFlashcard/.test(onclickAttr)) return;
 const nowMs = Date.now();
 if (nowMs - lastClickSoundTime > 260) {
 playSoundEffect("select");
@@ -2182,6 +2190,32 @@ const BASIC_FR_PT_DICT = {
   "payer": "pagar", "paie": "pago", "euros": "euros", "heures": "horas", "heure": "hora",
   "jour": "dia", "jours": "dias", "mois": "mês", "ans": "anos", "semaine": "semana"
 };
+
+
+let currentCourse = "fr"; // "fr" (Francês para BR) ou "pt" (Português para FR)
+
+function promptSwitchCourse(targetLang) {
+  if (targetLang === currentCourse) {
+    showToast(targetLang === "fr" ? "Você já está no curso de Francês!" : "Você já está no curso de Português!", "ℹ️");
+    return;
+  }
+  const msg = targetLang === "fr"
+    ? "Gostaria de trocar para o curso de Francês?"
+    : "Gostaria de trocar para o Curso de Português?";
+  
+  if (confirm(msg)) {
+    currentCourse = targetLang;
+    const titleEl = document.querySelector("h1.font-black.text-xl");
+    if (titleEl) {
+      titleEl.textContent = currentCourse === "fr" ? "Vagnilds Français" : "Vagnilds Português";
+    }
+    showToast(currentCourse === "fr" ? "Curso de Francês ativado!" : "Curso de Português ativado!", currentCourse === "fr" ? "🇫🇷" : "🇧🇷");
+    renderLearnPath();
+    renderVocabularyView();
+    renderDailyRandomPhrase(true);
+    updateAllCountersAndHeaders();
+  }
+}
 
 let cachedSpeechVoices = [];
 let dailyPhraseCurrent = null;
