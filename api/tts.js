@@ -3,16 +3,14 @@ import crypto from "crypto";
 const EDGE_TRUSTED_TOKEN = "6A5AA1D4EAFF4E9FB37E23D68491D6F4";
 
 const VOICE_PROFILES = {
-  cloud_lea: { edge: "fr-FR-DeniseNeural", pitch: "+2Hz", lang: "fr-FR" },
-  cloud_celine: { edge: "fr-FR-EloiseNeural", pitch: "+4Hz", lang: "fr-FR" },
-  cloud_henri: { edge: "fr-FR-HenriNeural", pitch: "-2Hz", lang: "fr-FR" },
-  cloud_lucas: { edge: "fr-FR-RemyMultilingualNeural", pitch: "-5Hz", lang: "fr-FR" },
-  cloud_mathieu: { edge: "fr-CA-AntoineNeural", pitch: "-2Hz", lang: "fr-FR" },
-  pt_antonio: { edge: "pt-BR-AntonioNeural", pitch: "0Hz", lang: "pt-BR" },
-  pt_francisca: { edge: "pt-BR-FranciscaNeural", pitch: "+2Hz", lang: "pt-BR" }
+  cloud_lea: { edge: "fr-FR-DeniseNeural", pitch: "+2Hz", googleTl: "fr-FR" },
+  cloud_celine: { edge: "fr-FR-EloiseNeural", pitch: "+4Hz", googleTl: "fr-FR" },
+  cloud_henri: { edge: "fr-FR-HenriNeural", pitch: "-2Hz", googleTl: "fr-CA" },
+  cloud_lucas: { edge: "fr-FR-RemyMultilingualNeural", pitch: "-5Hz", googleTl: "fr-CA" },
+  cloud_mathieu: { edge: "fr-CA-AntoineNeural", pitch: "-2Hz", googleTl: "fr-CA" }
 };
 
-function synthesizeViaEdgeWebSocket(text, voiceName, rateStr, pitchStr, langCode) {
+function synthesizeViaEdgeWebSocket(text, voiceName, rateStr, pitchStr) {
   return new Promise((resolve, reject) => {
     if (typeof WebSocket === "undefined") {
       return reject(new Error("WebSocket not available in runtime"));
@@ -66,7 +64,7 @@ function synthesizeViaEdgeWebSocket(text, voiceName, rateStr, pitchStr, langCode
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&apos;");
 
-      const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${langCode}'><voice name='${voiceName}'><prosody rate='${rateStr}' pitch='${pitchStr}'>${escapedText}</prosody></voice></speak>`;
+      const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='fr-FR'><voice name='${voiceName}'><prosody rate='${rateStr}' pitch='${pitchStr}'>${escapedText}</prosody></voice></speak>`;
       const ssmlMsg =
         `X-RequestId:${reqId}\r\n` +
         `Content-Type:application/ssml+xml\r\n` +
@@ -143,21 +141,24 @@ export default async function handler(req, res) {
   rateOffset = Math.max(-45, Math.min(35, rateOffset));
   const rateStr = (rateOffset >= 0 ? "+" : "") + rateOffset + "%";
 
+  // 1) Voz Neural Real via Microsoft Edge ReadAloud WebSocket (DeniseNeural / HenriNeural / RemyNeural / EloiseNeural)
   try {
-    const mp3Buffer = await synthesizeViaEdgeWebSocket(text, profile.edge, rateStr, profile.pitch, profile.lang);
+    const mp3Buffer = await synthesizeViaEdgeWebSocket(text, profile.edge, rateStr, profile.pitch);
     res.setHeader("Content-Type", "audio/mpeg");
     res.setHeader("X-TTS-Engine", "edge-neural-ws");
     res.setHeader("Cache-Control", "public, max-age=86400, s-maxage=86400");
     return res.status(200).send(mp3Buffer);
-  } catch (e) {}
+  } catch (e) {
+    // Segue para fallback neural Google Translate TTS
+  }
 
-  // Fallback Google Translate
+  // 2) Fallback: Google Translate Neural Audio Endpoint
   try {
     const slowFlag = rateNum < 0.78 ? "&ttsspeed=0.35" : "";
-    const gUrl = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${profile.lang}${slowFlag}&q=${encodeURIComponent(text)}`;
+    const gUrl = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${profile.googleTl}${slowFlag}&q=${encodeURIComponent(text)}`;
     const gResp = await fetch(gUrl, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
         "Referer": "https://translate.google.com/"
       }
     });
