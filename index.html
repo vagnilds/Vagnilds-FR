@@ -2007,12 +2007,20 @@ function applyCourseTranslations() {
   setTextBySelector("#nav-ranking span div span:nth-child(2)", s.navRanking);
   setTextBySelector("#nav-settings div span:nth-child(2)", s.navSettings);
 
+  // Traduzir o hero banner e botões principais
   const heroTitleEl = document.querySelector("#view-learn h2");
   if (heroTitleEl) {
     const name = user ? user.name : "Vagner";
     heroTitleEl.innerHTML = currentCourse === "pt"
       ? `Bonjour, <span id="heroUserName">${escapeHtml(name)}</span> ! Prêt pour le portugais ?`
       : `Bonjour, <span id="heroUserName">${escapeHtml(name)}</span> ! Prêt pour le français ?`;
+  }
+
+  const heroSubEl = document.querySelector("#view-learn p.text-sm");
+  if (heroSubEl) {
+    heroSubEl.textContent = currentCourse === "pt"
+      ? "Parcours structuré du zéro absolu (A1) jusqu'à l'autonomie pour vivre, louer, ouvrir un compte, travailler et socialiser au Brésil (B1/B2)."
+      : "Trilha estruturada do zero absoluto (A1) até a autonomia para morar, alugar imóvel, abrir conta, trabalhar e socializar na França (B1/B2). Quanto mais você evolui e passa nas provinhas, mais meses você adianta!";
   }
 
   setTextBySelector("#view-learn button[onclick*='diagnostic'] span:nth-child(2)", s.btnExam);
@@ -2026,6 +2034,23 @@ function applyCourseTranslations() {
   setTextBySelector("#view-practice h2", s.practiceTitle);
   setTextBySelector("#view-survival h2", s.survivalTitle);
   setTextBySelector("#view-ranking h2", s.rankingTitle);
+
+  // Traduzir botões de ouvir / nova no card de frase aleatória
+  const listenBtn = document.querySelector("#dailyRandomPhraseBar button[onclick*='speakDailyRandomPhrase(0.94)']");
+  if (listenBtn) listenBtn.textContent = currentCourse === "pt" ? "🔊 Écouter" : "🔊 Ouvir";
+
+  const newPhraseBtn = document.querySelector("#dailyRandomPhraseBar button[onclick*='renderDailyRandomPhrase(true)']");
+  if (newPhraseBtn) newPhraseBtn.textContent = currentCourse === "pt" ? "🔄 Nouvelle" : "🔄 Nova";
+
+  // Traduzir modo de organização (Par mois / Par module)
+  const mBtn = document.getElementById("orgMode-month");
+  const eBtn = document.getElementById("orgMode-evolution");
+  if (mBtn) mBtn.textContent = currentCourse === "pt" ? "📅 Par Mois (1–12)" : "📅 Por Mês (1–12)";
+  if (eBtn) eBtn.textContent = currentCourse === "pt" ? "🚀 Par Module" : "🚀 Por Módulo de Evolução";
+
+  // Traduzir filtro de meses
+  const stAll = document.getElementById("stage-all");
+  if (stAll) stAll.textContent = currentCourse === "pt" ? "Tous les 12 Mois" : "Todos os 12 Meses";
 }
 
 function promptSwitchCourse(targetLang) {
