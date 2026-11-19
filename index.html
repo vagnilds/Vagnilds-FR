@@ -2026,6 +2026,22 @@ appState = Object.assign(appState, parsed);
 console.warn("Storage fallback:", err);
 }
 }
+
+var autoSyncTimer = null;
+function scheduleAutoCloudSync() {
+  if (autoSyncTimer) clearTimeout(autoSyncTimer);
+  autoSyncTimer = setTimeout(function () {
+    try {
+      var actUser = (typeof getActiveUser === "function") ? getActiveUser() : null;
+      if (actUser && actUser.gmail && typeof userGoogleTokens !== "undefined" && userGoogleTokens[actUser.id]) {
+        if (typeof syncNowWithGoogleCloud === "function") {
+          syncNowWithGoogleCloud();
+        }
+      }
+    } catch (e) {}
+  }, 800);
+}
+
 function saveAppState() {
 try {
 localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
@@ -2033,6 +2049,7 @@ const actUser = getActiveUser();
 if (actUser && actUser.gmail) {
 localStorage.setItem("vagnilds_user_gmail_backup_" + actUser.gmail, JSON.stringify(actUser));
 }
+scheduleAutoCloudSync();
 } catch (err) {
 console.warn("Storage write fallback:", err);
 }
