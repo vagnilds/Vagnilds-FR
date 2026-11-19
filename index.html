@@ -216,6 +216,12 @@ box-shadow: 0 0 0 #cbd5e1;
 .flashcard-inner.is-flipped { transform: rotateY(180deg); }
 .flashcard-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .flashcard-back { transform: rotateY(180deg); }
+
+input, textarea, select, [contenteditable="true"] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
 </style>
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row bg-slate-50 text-slate-800">
@@ -2053,32 +2059,53 @@ function applyCourseTranslations() {
   if (stAll) stAll.textContent = currentCourse === "pt" ? "Tous les 12 Mois" : "Todos os 12 Meses";
 }
 
+var courseMode = "fr_course";
+
+function setCourseModeUI() {
+  var isPt = (courseMode === "pt_course");
+  var titleEl = document.querySelector("h1.font-black.text-xl");
+  if (titleEl) {
+    titleEl.textContent = isPt ? "Vagnilds Portugais" : "Vagnilds Français";
+  }
+  var navMap = {
+    "#nav-learn span:nth-child(2)": isPt ? "Parcours 12 Mois" : "Trilha 12 Meses",
+    "#nav-vocab span:nth-child(2)": isPt ? "Vocabulaire" : "Vocabulário",
+    "#nav-games span:nth-child(2)": isPt ? "Jeux Interactifs" : "Jogos Interativos",
+    "#nav-practice span:nth-child(2)": isPt ? "Laboratoire de Prononciation" : "Laboratório de Pronúncia",
+    "#nav-survival span:nth-child(2)": isPt ? "Guide Vivre au Brésil" : "Guia Morar na França",
+    "#nav-ranking span div span:nth-child(2)": isPt ? "Classement" : "Ranking da Turma",
+    "#nav-settings div span:nth-child(2)": isPt ? "Paramètres & Voix" : "Configurações & Voz"
+  };
+  for (var sel in navMap) {
+    var el = document.querySelector(sel);
+    if (el) el.textContent = navMap[sel];
+  }
+}
+
 function promptSwitchCourse(targetLang) {
-  if (targetLang === currentCourse) {
-    showToast(
-      targetLang === "fr"
-        ? "Você já está no curso de Francês!"
-        : "Vous êtes déjà dans le cours de Portugais !",
-      "ℹ️"
-    );
+  var desiredMode = (targetLang === "pt") ? "pt_course" : "fr_course";
+  if (courseMode === desiredMode) {
+    showToast(desiredMode === "fr_course" ? "Você já está no curso de Francês!" : "Vous êtes déjà dans le cours de Portugais !", "ℹ️");
     return;
   }
-  const msg = targetLang === "fr"
-    ? "Gostaria de trocar para o curso de Francês?"
-    : "Gostaria de trocar para o Curso de Português?";
+  var question = (targetLang === "pt")
+    ? "Gostaria de trocar para o Curso de Português?"
+    : "Gostaria de trocar para o curso de Francês?";
 
-  if (confirm(msg)) {
+  if (window.confirm(question)) {
+    courseMode = desiredMode;
     currentCourse = targetLang;
-    applyCourseTranslations();
-    renderDailyRandomPhrase(true);
-    renderLearnPath();
-    renderVocabularyView();
-    updateAllCountersAndHeaders();
+    setCourseModeUI();
+    if (typeof applyCourseTranslations === "function") applyCourseTranslations();
+    if (typeof renderDailyRandomPhrase === "function") renderDailyRandomPhrase(true);
+    if (typeof renderLearnPath === "function") renderLearnPath();
+    if (typeof renderVocabularyView === "function") renderVocabularyView();
+    if (typeof updateAllCountersAndHeaders === "function") updateAllCountersAndHeaders();
     showToast(
-      currentCourse === "fr"
-        ? COURSE_UI_STRINGS.fr.toastSwitchedFr
-        : COURSE_UI_STRINGS.pt.toastSwitchedPt,
-      currentCourse === "fr" ? "🇫🇷" : "🇧🇷"
+      targetLang === "pt"
+        ? "Cours de Portugais activé !"
+        : "Curso de Francês ativado !",
+      targetLang === "pt" ? "🇧🇷" : "🇫🇷"
     );
   }
 }
@@ -2723,6 +2750,13 @@ function renderUnitCardHtml(unit, user) {
   const done = (user.completedUnits || []).includes(unit.id);
   const progress = (user.unitProgress && user.unitProgress[unit.id]) || 0;
   const masteredInUnit = unit.vocab.filter(v => (user.masteredVocab || []).includes(v.id)).length;
+  const isPtCourse = currentCourse === "pt";
+  const unitTitle = isPtCourse ? `Mois ${unit.month} : Portugais pratique (${unit.cefr})` : unit.title;
+  const unitSub = isPtCourse ? `Apprendre le portugais pour francophones — ${unit.subtitle}` : unit.subtitle;
+  const n1Label = isPtCourse ? "1. Vocabulaire" : "1. Vocabulário";
+  const n2Label = isPtCourse ? "2. Écoute & Phrases" : "2. Escuta & Frases";
+  const n3Label = isPtCourse ? "3. Défi du Mois" : "3. Desafio do Mês";
+  const btnLabel = done ? (isPtCourse ? "🔁 Réviser (+20 XP)" : "🔁 Revisar (+20 XP)") : (isPtCourse ? "▶ Commencer" : "▶ Iniciar Lição");
 
   return `
   <div class="bg-white rounded-3xl border-2 border-slate-200 overflow-hidden shadow-sm">
@@ -2735,13 +2769,13 @@ function renderUnitCardHtml(unit, user) {
             <span class="px-2 py-0.5 rounded-full bg-black/20 text-[10px] font-black">${unit.vocab.length} expressões</span>
             ${done ? '<span class="px-2 py-0.5 rounded-full bg-amber-300 text-slate-900 text-[10px] font-black">✓ Concluído</span>' : ''}
           </div>
-          <h3 class="text-base sm:text-lg font-black mt-1 leading-snug">${escapeHtml(unit.title)}</h3>
-          <p class="text-xs text-white/90 font-semibold">${escapeHtml(unit.subtitle)}</p>
+          <h3 class="text-base sm:text-lg font-black mt-1 leading-snug">${escapeHtml(unitTitle)}</h3>
+          <p class="text-xs text-white/90 font-semibold">${escapeHtml(unitSub)}</p>
         </div>
       </div>
       <div class="flex items-center gap-2 shrink-0">
         <button onclick="startUnitLesson('${unit.id}', 'practice')" class="px-4 py-2.5 rounded-2xl bg-white text-slate-900 hover:bg-slate-100 font-black text-xs shadow">
-          ${done ? "🔁 Revisar (+20 XP)" : "▶ Iniciar Lição"}
+          ${btnLabel}
         </button>
       </div>
     </div>
@@ -2752,19 +2786,19 @@ function renderUnitCardHtml(unit, user) {
           <button onclick="startUnitLesson('${unit.id}', 'vocab')" class="node-circle ${c.node} text-white text-2xl font-black">
             ${progress >= 1 ? "✅" : "📘"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">1. Vocabulário</span>
+          <span class="text-[11px] font-black text-slate-700">${n1Label}</span>
         </div>
         <div class="flex flex-col items-center gap-1.5">
           <button onclick="startUnitLesson('${unit.id}', 'listen')" class="node-circle ${c.node} text-white text-2xl font-black">
             ${progress >= 2 ? "✅" : "🎧"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">2. Escuta & Frases</span>
+          <span class="text-[11px] font-black text-slate-700">${n2Label}</span>
         </div>
         <div class="flex flex-col items-center gap-1.5">
           <button onclick="startUnitLesson('${unit.id}', 'boss')" class="node-circle ${done ? 'bg-amber-400 shadow-[0_6px_0_#b45309]' : c.node} text-white text-2xl font-black">
             ${done ? "🏆" : "⭐"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">3. Desafio do Mês</span>
+          <span class="text-[11px] font-black text-slate-700">${n3Label}</span>
         </div>
       </div>
       <!-- Dica Cultural -->
