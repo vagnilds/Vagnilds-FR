@@ -216,12 +216,6 @@ box-shadow: 0 0 0 #cbd5e1;
 .flashcard-inner.is-flipped { transform: rotateY(180deg); }
 .flashcard-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .flashcard-back { transform: rotateY(180deg); }
-
-input, textarea, select, [contenteditable="true"] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-}
-
 </style>
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row bg-slate-50 text-slate-800">
@@ -287,16 +281,9 @@ input, textarea, select, [contenteditable="true"] {
 <div class="p-4 border-b-2 border-slate-100 shrink-0">
 <div class="flex items-center justify-between mb-3">
 <div onclick="handleBrandEasterEggClick()" class="flex items-center gap-2.5 cursor-pointer select-none group" title="Vagnilds Français">
-<div class="flex items-center gap-2">
-<div onclick="event.stopPropagation(); promptSwitchCourse('fr')" class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 via-white to-red-600 p-0.5 shadow-sm flex items-center justify-center cursor-pointer hover:scale-105 transition" title="Curso de Francês">
+<div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 via-white to-red-600 p-0.5 shadow-sm flex items-center justify-center group-active:scale-95 transition">
 <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 3 2" aria-label="França"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>
-</div>
-</div>
-<div onclick="event.stopPropagation(); promptSwitchCourse('pt')" class="w-10 h-10 rounded-2xl bg-gradient-to-br from-green-600 via-yellow-400 to-blue-700 p-0.5 shadow-sm flex items-center justify-center cursor-pointer hover:scale-105 transition" title="Curso de Português para Franceses">
-<div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 20 14" aria-label="Brasil"><rect width="20" height="14" fill="#009b3a"/><polygon points="10,1 19,7 10,13 1,7" fill="#fedf00"/><circle cx="10" cy="7" r="3.5" fill="#002776"/></svg>
-</div>
+<svg class="w-6 h-4 rounded-[3px] shadow-sm" viewBox="0 0 3 2" aria-label="Bandeira da França"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg>
 </div>
 </div>
 <div>
@@ -1900,216 +1887,6 @@ list.push(Object.assign({}, item, { unitId: unit.id, unitTitle: unit.title, mont
 }
 return list;
 }
-
-let currentCourse = "fr"; // "fr" = Curso de Francês (UI em PT), "pt" = Curso de Português para Franceses (UI em FR)
-
-const COURSE_UI_STRINGS = {
-  fr: {
-    brandTitle: "Vagnilds Français",
-    navLearn: "Trilha 12 Meses",
-    navVocab: "Vocabulário",
-    navGames: "Jogos Interativos",
-    navPractice: "Laboratório de Pronúncia",
-    navSurvival: "Guia Morar na França",
-    navRanking: "Ranking da Turma",
-    navSettings: "Configurações & Voz",
-    btnExam: "Provinha de Nível (Adiantar Meses)",
-    btnSmart: "Treino Inteligente (+20 XP)",
-    btnRanking: "Progresso da Turma",
-    dailyLabel: "✨ Expressão Aleatória em Francês — Clique nas palavras",
-    evoLabel: "Seu Nível Atual & Evolução",
-    vocabTitle: "📖 Banco Completo de Vocabulário & Frases (1 Ano na França)",
-    vocabSub: "Toque em 🔊 para ouvir a pronúncia francesa nativa ou marque palavras como dominadas.",
-    gamesTitle: "Setor de Jogos Interativos em Francês",
-    practiceTitle: "🎯 Centro de Treinamento Intensivo",
-    survivalTitle: "🥐 Manual de Sobrevivência & Burocracia na França",
-    rankingTitle: "Ranking & Progresso de Todos os Usuários",
-    confirmSwitchToFr: "Gostaria de trocar para o curso de Francês?",
-    confirmSwitchToPt: "Gostaria de trocar para o Curso de Português?",
-    toastSwitchedFr: "Curso de Francês ativado! Tudo em português para aprender francês.",
-    toastSwitchedPt: "Cours de Portugais activé ! Interface en français pour apprendre le portugais."
-  },
-  pt: {
-    brandTitle: "Vagnilds Portugais",
-    navLearn: "Parcours 12 Mois",
-    navVocab: "Vocabulaire",
-    navGames: "Jeux Interactifs",
-    navPractice: "Laboratoire de Prononciation",
-    navSurvival: "Guide Vivre au Brésil",
-    navRanking: "Classement",
-    navSettings: "Paramètres & Voix",
-    btnExam: "Test de Niveau (Avancer)",
-    btnSmart: "Entraînement Intelligent (+20 XP)",
-    btnRanking: "Progression du Groupe",
-    dailyLabel: "✨ Expression Aléatoire en Portugais — Cliquez sur les mots",
-    evoLabel: "Votre Niveau & Évolution",
-    vocabTitle: "📖 Banque Complète de Vocabulaire & Phrases (1 An au Brésil)",
-    vocabSub: "Touchez 🔊 pour écouter la prononciation portugaise native ou marquez les mots maîtrisés.",
-    gamesTitle: "Section Jeux Interactifs en Portugais",
-    practiceTitle: "🎯 Centre d'Entraînement Intensif",
-    survivalTitle: "🥐 Manuel de Survie & Bureaucratie au Brésil",
-    rankingTitle: "Classement & Progression de Tous les Utilisateurs",
-    confirmSwitchToFr: "Gostaria de trocar para o curso de Francês?",
-    confirmSwitchToPt: "Gostaria de trocar para o Curso de Português?",
-    toastSwitchedFr: "Curso de Francês ativado !",
-    toastSwitchedPt: "Cours de Portugais activé !"
-  }
-};
-
-function getTargetPhrase(item) {
-  if (!item) return "";
-  if (currentCourse === "pt") {
-    return item.exPt || item.pt || "";
-  }
-  return item.exFr || item.fr || "";
-}
-
-function getTargetWord(item) {
-  if (!item) return "";
-  if (currentCourse === "pt") {
-    return item.pt || "";
-  }
-  return item.fr || "";
-}
-
-function getHelperTranslation(item) {
-  if (!item) return "";
-  if (currentCourse === "pt") {
-    return item.exFr || item.fr || "";
-  }
-  return item.exPt || item.pt || "";
-}
-
-function speakCourseAudio(text, rate) {
-  if (!text) return;
-  if (currentCourse === "pt") {
-    const prevVoice = appState.selectedVoiceName;
-    appState.selectedVoiceName = (appState.voiceGender === "male") ? "pt_antonio" : "pt_francisca";
-    Promise.resolve(speakFrench(text, rate)).finally(() => {
-      appState.selectedVoiceName = prevVoice;
-    });
-  } else {
-    speakFrench(text, rate);
-  }
-}
-
-function applyCourseTranslations() {
-  const s = COURSE_UI_STRINGS[currentCourse] || COURSE_UI_STRINGS.fr;
-  const user = getActiveUser();
-
-  const brandEl = document.querySelector("h1.font-black.text-xl");
-  if (brandEl) brandEl.textContent = s.brandTitle;
-
-  const setTextBySelector = (sel, txt) => {
-    const el = document.querySelector(sel);
-    if (el) el.textContent = txt;
-  };
-
-  setTextBySelector("#nav-learn span:nth-child(2)", s.navLearn);
-  setTextBySelector("#nav-vocab span:nth-child(2)", s.navVocab);
-  setTextBySelector("#nav-games span:nth-child(2)", s.navGames);
-  setTextBySelector("#nav-practice span:nth-child(2)", s.navPractice);
-  setTextBySelector("#nav-survival span:nth-child(2)", s.navSurvival);
-  setTextBySelector("#nav-ranking span div span:nth-child(2)", s.navRanking);
-  setTextBySelector("#nav-settings div span:nth-child(2)", s.navSettings);
-
-  // Traduzir o hero banner e botões principais
-  const heroTitleEl = document.querySelector("#view-learn h2");
-  if (heroTitleEl) {
-    const name = user ? user.name : "Vagner";
-    heroTitleEl.innerHTML = currentCourse === "pt"
-      ? `Bonjour, <span id="heroUserName">${escapeHtml(name)}</span> ! Prêt pour le portugais ?`
-      : `Bonjour, <span id="heroUserName">${escapeHtml(name)}</span> ! Prêt pour le français ?`;
-  }
-
-  const heroSubEl = document.querySelector("#view-learn p.text-sm");
-  if (heroSubEl) {
-    heroSubEl.textContent = currentCourse === "pt"
-      ? "Parcours structuré du zéro absolu (A1) jusqu'à l'autonomie pour vivre, louer, ouvrir un compte, travailler et socialiser au Brésil (B1/B2)."
-      : "Trilha estruturada do zero absoluto (A1) até a autonomia para morar, alugar imóvel, abrir conta, trabalhar e socializar na França (B1/B2). Quanto mais você evolui e passa nas provinhas, mais meses você adianta!";
-  }
-
-  setTextBySelector("#view-learn button[onclick*='diagnostic'] span:nth-child(2)", s.btnExam);
-  setTextBySelector("#view-learn button[onclick*='startQuickSmartPractice'] span:nth-child(2)", s.btnSmart);
-  setTextBySelector("#view-learn button[onclick*=\"switchTab('ranking')\"] span:nth-child(2)", s.btnRanking);
-  setTextBySelector("#dailyRandomPhraseBar p", s.dailyLabel);
-  setTextBySelector("#evoCardIcon + div p", s.evoLabel);
-  setTextBySelector("#view-vocab h2", s.vocabTitle);
-  setTextBySelector("#view-vocab p", s.vocabSub);
-  setTextBySelector("#view-games h2", s.gamesTitle);
-  setTextBySelector("#view-practice h2", s.practiceTitle);
-  setTextBySelector("#view-survival h2", s.survivalTitle);
-  setTextBySelector("#view-ranking h2", s.rankingTitle);
-
-  // Traduzir botões de ouvir / nova no card de frase aleatória
-  const listenBtn = document.querySelector("#dailyRandomPhraseBar button[onclick*='speakDailyRandomPhrase(0.94)']");
-  if (listenBtn) listenBtn.textContent = currentCourse === "pt" ? "🔊 Écouter" : "🔊 Ouvir";
-
-  const newPhraseBtn = document.querySelector("#dailyRandomPhraseBar button[onclick*='renderDailyRandomPhrase(true)']");
-  if (newPhraseBtn) newPhraseBtn.textContent = currentCourse === "pt" ? "🔄 Nouvelle" : "🔄 Nova";
-
-  // Traduzir modo de organização (Par mois / Par module)
-  const mBtn = document.getElementById("orgMode-month");
-  const eBtn = document.getElementById("orgMode-evolution");
-  if (mBtn) mBtn.textContent = currentCourse === "pt" ? "📅 Par Mois (1–12)" : "📅 Por Mês (1–12)";
-  if (eBtn) eBtn.textContent = currentCourse === "pt" ? "🚀 Par Module" : "🚀 Por Módulo de Evolução";
-
-  // Traduzir filtro de meses
-  const stAll = document.getElementById("stage-all");
-  if (stAll) stAll.textContent = currentCourse === "pt" ? "Tous les 12 Mois" : "Todos os 12 Meses";
-}
-
-var courseMode = "fr_course";
-
-function setCourseModeUI() {
-  var isPt = (courseMode === "pt_course");
-  var titleEl = document.querySelector("h1.font-black.text-xl");
-  if (titleEl) {
-    titleEl.textContent = isPt ? "Vagnilds Portugais" : "Vagnilds Français";
-  }
-  var navMap = {
-    "#nav-learn span:nth-child(2)": isPt ? "Parcours 12 Mois" : "Trilha 12 Meses",
-    "#nav-vocab span:nth-child(2)": isPt ? "Vocabulaire" : "Vocabulário",
-    "#nav-games span:nth-child(2)": isPt ? "Jeux Interactifs" : "Jogos Interativos",
-    "#nav-practice span:nth-child(2)": isPt ? "Laboratoire de Prononciation" : "Laboratório de Pronúncia",
-    "#nav-survival span:nth-child(2)": isPt ? "Guide Vivre au Brésil" : "Guia Morar na França",
-    "#nav-ranking span div span:nth-child(2)": isPt ? "Classement" : "Ranking da Turma",
-    "#nav-settings div span:nth-child(2)": isPt ? "Paramètres & Voix" : "Configurações & Voz"
-  };
-  for (var sel in navMap) {
-    var el = document.querySelector(sel);
-    if (el) el.textContent = navMap[sel];
-  }
-}
-
-function promptSwitchCourse(targetLang) {
-  var desiredMode = (targetLang === "pt") ? "pt_course" : "fr_course";
-  if (courseMode === desiredMode) {
-    showToast(desiredMode === "fr_course" ? "Você já está no curso de Francês!" : "Vous êtes déjà dans le cours de Portugais !", "ℹ️");
-    return;
-  }
-  var question = (targetLang === "pt")
-    ? "Gostaria de trocar para o Curso de Português?"
-    : "Gostaria de trocar para o curso de Francês?";
-
-  if (window.confirm(question)) {
-    courseMode = desiredMode;
-    currentCourse = targetLang;
-    setCourseModeUI();
-    if (typeof applyCourseTranslations === "function") applyCourseTranslations();
-    if (typeof renderDailyRandomPhrase === "function") renderDailyRandomPhrase(true);
-    if (typeof renderLearnPath === "function") renderLearnPath();
-    if (typeof renderVocabularyView === "function") renderVocabularyView();
-    if (typeof updateAllCountersAndHeaders === "function") updateAllCountersAndHeaders();
-    showToast(
-      targetLang === "pt"
-        ? "Cours de Portugais activé !"
-        : "Curso de Francês ativado !",
-      targetLang === "pt" ? "🇧🇷" : "🇫🇷"
-    );
-  }
-}
-
 function getLeagueInfo(xp) {
 if (xp >= 1400) return { name: "Diamante", icon: "💎", badgeClass: "bg-cyan-100 text-cyan-800 border-cyan-300" };
 if (xp >= 1100) return { name: "Esmeralda", icon: "💚", badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-300" };
@@ -2407,8 +2184,308 @@ const BASIC_FR_PT_DICT = {
   "jour": "dia", "jours": "dias", "mois": "mês", "ans": "anos", "semaine": "semana"
 };
 
+let cachedSpeechVoices = [];
+let dailyPhraseCurrent = null;
+let tabHistoryStack = [];
+let pendingPasswordSwitchUserId = null;
+let brandClickCount = 0;
+let brandClickTimer = null;
+let toastTimer = null;
+let balloonCurrentWord = "";
+let flashcardDeck = [];
+let flashcardIdx = 0;
+let activeArcadeGame = "speed";
+let speedTimerInterval = null;
+let speedGameState = null;
+let memoryGameState = null;
+let scrambleGameState = null;
+let bistroGameState = null;
+let googleAccessToken = null;
+let googleTokenClient = null;
+const ADMIN_MASTER_PASS = "vagnilds365";
 
+function escapeHtml(str) {
+  return String(str == null ? "" : str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
+function escapeJsStr(str) {
+  return String(str == null ? "" : str)
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "\\n");
+}
+
+function normalizeFr(str) {
+  return String(str || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’'`]/g, "'")
+    .replace(/[?!.,;:()«»"]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function shuffleArray(arr) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = copy[i];
+    copy[i] = copy[j];
+    copy[j] = tmp;
+  }
+  return copy;
+}
+
+function showToast(text, icon) {
+  const banner = document.getElementById("toastBanner");
+  const iconEl = document.getElementById("toastIcon");
+  const textEl = document.getElementById("toastText");
+  if (!banner || !textEl) return;
+  if (iconEl) iconEl.textContent = icon || "✨";
+  textEl.textContent = text;
+  banner.classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    banner.classList.add("hidden");
+  }, 3000);
+}
+
+/* ==================== VOZ FRANCESA NEURAL HD (TODOS OS DISPOSITIVOS) ==================== */
+const neuralAudioCache = {};
+let activeNeuralAudioEl = null;
+
+function refreshAvailableVoices() {
+  if (!("speechSynthesis" in window)) return;
+  const voices = window.speechSynthesis.getVoices() || [];
+  cachedSpeechVoices = voices.filter(v => /^fr/i.test(v.lang || ""));
+  populateVoiceSelectOptions();
+}
+
+function populateVoiceSelectOptions() {
+  const selects = [
+    document.getElementById("frenchVoiceSelect"),
+    document.getElementById("settingsVoiceEngineSelect")
+  ].filter(Boolean);
+  if (!selects.length) return;
+
+  const baseOptions = [
+    { val: "cloud_lea", label: "👩 Denise / Léa Neural HD (Feminina)" },
+    { val: "cloud_celine", label: "👩 Éloïse / Céline Neural HD (Feminina Suave)" },
+    { val: "cloud_henri", label: "👨 Henri Neural HD (Masculina Natural)" },
+    { val: "cloud_lucas", label: "👨 Rémy / Lucas Neural HD (Masculina Grave)" },
+    { val: "cloud_mathieu", label: "👨 Antoine / Mathieu Neural HD (Masculina)" }
+  ];
+
+  selects.forEach(sel => {
+    const current = appState.selectedVoiceName || "cloud_lea";
+    let html = `<optgroup label="✨ Vozes Neurais HD (PC, Android & iPhone)">` +
+      baseOptions.map(o => `<option value="${o.val}">${o.label}</option>`).join("") +
+      `</optgroup>`;
+    if (cachedSpeechVoices.length > 0) {
+      html += `<optgroup label="Vozes Locais do Navegador (Offline)">`;
+      cachedSpeechVoices.forEach(v => {
+        const isMale = MALE_FR_REGEX.test(v.name);
+        const icon = isMale ? "👨" : "👩";
+        html += `<option value="sys:${escapeHtml(v.name)}">${icon} ${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`;
+      });
+      html += `</optgroup>`;
+    }
+    sel.innerHTML = html;
+    if (Array.from(sel.options).some(o => o.value === current)) {
+      sel.value = current;
+    }
+  });
+  updateVoiceGenderButtonsUI();
+}
+
+function updateVoiceGenderButtonsUI() {
+  const isFemale = appState.voiceGender !== "male";
+  const pairs = [
+    ["sidebarVoiceFemaleBtn", "sidebarVoiceMaleBtn"],
+    ["settingsVoiceFemaleBtn", "settingsVoiceMaleBtn"]
+  ];
+  pairs.forEach(([fId, mId]) => {
+    const fBtn = document.getElementById(fId);
+    const mBtn = document.getElementById(mId);
+    if (fBtn) {
+      fBtn.className = fBtn.className.replace(/bg-\S+|text-\S+|border-\S+/g, "").trim() +
+        (isFemale ? " bg-sky-600 text-white border-sky-700" : " bg-white text-slate-600 border-slate-200");
+    }
+    if (mBtn) {
+      mBtn.className = mBtn.className.replace(/bg-\S+|text-\S+|border-\S+/g, "").trim() +
+        (!isFemale ? " bg-sky-600 text-white border-sky-700" : " bg-white text-slate-600 border-slate-200");
+    }
+  });
+  const hint = document.getElementById("settingsVoiceStatusHint");
+  if (hint) {
+    hint.textContent = "✨ Voz Neural HD ativa (PC, Android e iPhone sem voz robótica)";
+  }
+}
+
+function pickBestFrenchVoice() {
+  const voices = cachedSpeechVoices.length ? cachedSpeechVoices : (window.speechSynthesis ? window.speechSynthesis.getVoices().filter(v => /^fr/i.test(v.lang || "")) : []);
+  if (!voices.length) return null;
+  const sel = appState.selectedVoiceName || "";
+  if (sel.startsWith("sys:")) {
+    const exactName = sel.slice(4);
+    const found = voices.find(v => v.name === exactName);
+    if (found) return found;
+  }
+  const wantMale = appState.voiceGender === "male" || /henri|lucas|mathieu/i.test(sel);
+  const scored = voices.map(v => {
+    let score = 0;
+    if (/fr[-_]FR/i.test(v.lang)) score += 20;
+    if (/natural|neural|online/i.test(v.name)) score += 80;
+    if (/google|premium|enhanced|denise|henri|eloise|vivienne|remy/i.test(v.name)) score += 50;
+    if (/hortense|paul|julie/i.test(v.name)) score -= 25; // Penaliza vozes SAPI5 antigas e robóticas do Windows
+    if (wantMale && MALE_FR_REGEX.test(v.name)) score += 45;
+    if (!wantMale && FEMALE_FR_REGEX.test(v.name)) score += 45;
+    if (!wantMale && !MALE_FR_REGEX.test(v.name)) score += 10;
+    return { v, score };
+  }).sort((a, b) => b.score - a.score);
+  return scored[0] ? scored[0].v : voices[0];
+}
+
+function stopAllFrenchSpeech() {
+  if (activeNeuralAudioEl) {
+    try {
+      activeNeuralAudioEl.pause();
+      activeNeuralAudioEl.currentTime = 0;
+    } catch (e) {}
+    activeNeuralAudioEl = null;
+  }
+  if ("speechSynthesis" in window) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+  }
+}
+
+function speakWithBrowserFallback(cleanText, rate) {
+  if (!("speechSynthesis" in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(cleanText);
+    utter.lang = "fr-FR";
+    utter.rate = typeof rate === "number" ? rate : 0.94;
+    const sel = appState.selectedVoiceName || "";
+    const wantMale = appState.voiceGender === "male" || /henri|lucas|mathieu/i.test(sel);
+    if (sel === "cloud_lucas") utter.pitch = 0.84;
+    else if (sel === "cloud_henri" || sel === "cloud_mathieu") utter.pitch = 0.9;
+    else if (sel === "cloud_celine") utter.pitch = 1.08;
+    else utter.pitch = wantMale ? 0.9 : 1.02;
+
+    const voice = pickBestFrenchVoice();
+    if (voice) utter.voice = voice;
+    window.speechSynthesis.speak(utter);
+  } catch (e) {
+    console.warn("Browser TTS fallback error:", e);
+  }
+}
+
+async function speakFrench(text, rate) {
+  if (!text) return;
+  const cleanText = String(text).replace(/\(.*?\)/g, "").replace(/\s+/g, " ").trim();
+  if (!cleanText) return;
+
+  stopAllFrenchSpeech();
+
+  const sel = appState.selectedVoiceName || (appState.voiceGender === "male" ? "cloud_henri" : "cloud_lea");
+  // Se o usuário escolheu explicitamente uma voz local do dispositivo (sys:...)
+  if (sel.startsWith("sys:")) {
+    speakWithBrowserFallback(cleanText, rate);
+    return;
+  }
+
+  const normalizedRate = typeof rate === "number" ? rate : 0.95;
+  const voiceKey = sel.startsWith("cloud_") ? sel : (appState.voiceGender === "male" ? "cloud_henri" : "cloud_lea");
+  const cacheKey = `${voiceKey}|${normalizedRate.toFixed(2)}|${cleanText}`;
+
+  try {
+    let audioUrl = neuralAudioCache[cacheKey];
+    if (!audioUrl) {
+      const apiUrl = `/api/tts?voice=${encodeURIComponent(voiceKey)}&rate=${encodeURIComponent(normalizedRate)}&text=${encodeURIComponent(cleanText)}`;
+      const resp = await fetch(apiUrl);
+      if (!resp.ok) throw new Error("Neural TTS endpoint status " + resp.status);
+      const blob = await resp.blob();
+      if (!blob || blob.size < 200) throw new Error("Empty neural audio blob");
+      audioUrl = URL.createObjectURL(blob);
+      neuralAudioCache[cacheKey] = audioUrl;
+    }
+
+    const audio = new Audio(audioUrl);
+    activeNeuralAudioEl = audio;
+    if (normalizedRate < 0.80) {
+      audio.playbackRate = 0.85;
+    }
+    await audio.play();
+  } catch (err) {
+    // Caso esteja offline ou rodando localmente sem servidor Vercel, usa a melhor voz do navegador
+    speakWithBrowserFallback(cleanText, normalizedRate);
+  }
+}
+
+function setFrenchVoiceGender(gender) {
+  appState.voiceGender = gender === "male" ? "male" : "female";
+  if (appState.voiceGender === "male" && /lea|celine/i.test(appState.selectedVoiceName || "")) {
+    appState.selectedVoiceName = "cloud_henri";
+  } else if (appState.voiceGender === "female" && /henri|lucas|mathieu/i.test(appState.selectedVoiceName || "")) {
+    appState.selectedVoiceName = "cloud_lea";
+  }
+  saveAppState();
+  populateVoiceSelectOptions();
+  showToast(appState.voiceGender === "male" ? "Voz Neural Masculina ativada" : "Voz Neural Feminina ativada", "🗣️");
+}
+
+function handleVoiceSelectionChange() {
+  const sel = document.getElementById("frenchVoiceSelect");
+  if (!sel) return;
+  appState.selectedVoiceName = sel.value;
+  if (/henri|lucas|mathieu/i.test(sel.value) || MALE_FR_REGEX.test(sel.value)) {
+    appState.voiceGender = "male";
+  } else {
+    appState.voiceGender = "female";
+  }
+  const s2 = document.getElementById("settingsVoiceEngineSelect");
+  if (s2) s2.value = sel.value;
+  saveAppState();
+  updateVoiceGenderButtonsUI();
+}
+
+function handleSettingsVoiceSelectChange() {
+  const sel = document.getElementById("settingsVoiceEngineSelect");
+  if (!sel) return;
+  appState.selectedVoiceName = sel.value;
+  if (/henri|lucas|mathieu/i.test(sel.value) || MALE_FR_REGEX.test(sel.value)) {
+    appState.voiceGender = "male";
+  } else {
+    appState.voiceGender = "female";
+  }
+  const s1 = document.getElementById("frenchVoiceSelect");
+  if (s1) s1.value = sel.value;
+  saveAppState();
+  updateVoiceGenderButtonsUI();
+}
+
+function testSelectedFrenchVoice() {
+  speakFrench("Bonjour ! Bienvenue sur Français avec Vagnilds. Cette voix neurale est naturelle sur PC et mobile !", 0.95);
+}
+
+function speakCustomInput(rate) {
+  const inp = document.getElementById("customTtsInput");
+  if (!inp || !inp.value.trim()) {
+    showToast("Digite uma frase em francês para ouvir.", "🗣️");
+    return;
+  }
+  speakFrench(inp.value.trim(), rate || 0.95);
+}
+
+/* ==================== TRADUÇÃO PALAVRA POR PALAVRA ==================== */
 function lookupWordTranslation(word) {
   const clean = String(word || "").replace(/^[«"'(\[]+|[»"').,!?;:\]]+$/g, "").trim();
   const lower = clean.toLowerCase().replace(/’/g, "'");
@@ -2489,21 +2566,15 @@ function renderDailyRandomPhrase(forceNew) {
   }
   const frEl = document.getElementById("dailyPhraseFr");
   const ptEl = document.getElementById("dailyPhrasePt");
-  const mainText = getTargetPhrase(dailyPhraseCurrent);
-  const subText = getHelperTranslation(dailyPhraseCurrent);
-  if (frEl) frEl.innerHTML = renderClickableFrenchText(mainText);
+  if (frEl) frEl.innerHTML = renderClickableFrenchText(dailyPhraseCurrent.exFr || dailyPhraseCurrent.fr);
   if (ptEl) {
-    const flag = currentCourse === "pt" ? "🇫🇷" : "🇧🇷";
-    ptEl.innerHTML = `${flag} ${escapeHtml(subText)} • <span class="text-sky-600">[${escapeHtml(dailyPhraseCurrent.pron || "")}]</span>`;
+    ptEl.innerHTML = `🇧🇷 ${escapeHtml(dailyPhraseCurrent.exPt || dailyPhraseCurrent.pt)} • <span class="text-sky-600">[${escapeHtml(dailyPhraseCurrent.pron || "")}]</span>`;
   }
 }
 
 function speakDailyRandomPhrase(rate) {
   if (!dailyPhraseCurrent) renderDailyRandomPhrase(false);
-  if (dailyPhraseCurrent) {
-    const txt = getTargetPhrase(dailyPhraseCurrent);
-    speakCourseAudio(txt, rate || 0.94);
-  }
+  if (dailyPhraseCurrent) speakFrench(dailyPhraseCurrent.exFr || dailyPhraseCurrent.fr, rate || 0.94);
 }
 
 /* ==================== NAVEGAÇÃO & SIDEBAR ==================== */
@@ -2750,13 +2821,6 @@ function renderUnitCardHtml(unit, user) {
   const done = (user.completedUnits || []).includes(unit.id);
   const progress = (user.unitProgress && user.unitProgress[unit.id]) || 0;
   const masteredInUnit = unit.vocab.filter(v => (user.masteredVocab || []).includes(v.id)).length;
-  const isPtCourse = currentCourse === "pt";
-  const unitTitle = isPtCourse ? `Mois ${unit.month} : Portugais pratique (${unit.cefr})` : unit.title;
-  const unitSub = isPtCourse ? `Apprendre le portugais pour francophones — ${unit.subtitle}` : unit.subtitle;
-  const n1Label = isPtCourse ? "1. Vocabulaire" : "1. Vocabulário";
-  const n2Label = isPtCourse ? "2. Écoute & Phrases" : "2. Escuta & Frases";
-  const n3Label = isPtCourse ? "3. Défi du Mois" : "3. Desafio do Mês";
-  const btnLabel = done ? (isPtCourse ? "🔁 Réviser (+20 XP)" : "🔁 Revisar (+20 XP)") : (isPtCourse ? "▶ Commencer" : "▶ Iniciar Lição");
 
   return `
   <div class="bg-white rounded-3xl border-2 border-slate-200 overflow-hidden shadow-sm">
@@ -2769,13 +2833,13 @@ function renderUnitCardHtml(unit, user) {
             <span class="px-2 py-0.5 rounded-full bg-black/20 text-[10px] font-black">${unit.vocab.length} expressões</span>
             ${done ? '<span class="px-2 py-0.5 rounded-full bg-amber-300 text-slate-900 text-[10px] font-black">✓ Concluído</span>' : ''}
           </div>
-          <h3 class="text-base sm:text-lg font-black mt-1 leading-snug">${escapeHtml(unitTitle)}</h3>
-          <p class="text-xs text-white/90 font-semibold">${escapeHtml(unitSub)}</p>
+          <h3 class="text-base sm:text-lg font-black mt-1 leading-snug">${escapeHtml(unit.title)}</h3>
+          <p class="text-xs text-white/90 font-semibold">${escapeHtml(unit.subtitle)}</p>
         </div>
       </div>
       <div class="flex items-center gap-2 shrink-0">
         <button onclick="startUnitLesson('${unit.id}', 'practice')" class="px-4 py-2.5 rounded-2xl bg-white text-slate-900 hover:bg-slate-100 font-black text-xs shadow">
-          ${btnLabel}
+          ${done ? "🔁 Revisar (+20 XP)" : "▶ Iniciar Lição"}
         </button>
       </div>
     </div>
@@ -2786,19 +2850,19 @@ function renderUnitCardHtml(unit, user) {
           <button onclick="startUnitLesson('${unit.id}', 'vocab')" class="node-circle ${c.node} text-white text-2xl font-black">
             ${progress >= 1 ? "✅" : "📘"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">${n1Label}</span>
+          <span class="text-[11px] font-black text-slate-700">1. Vocabulário</span>
         </div>
         <div class="flex flex-col items-center gap-1.5">
           <button onclick="startUnitLesson('${unit.id}', 'listen')" class="node-circle ${c.node} text-white text-2xl font-black">
             ${progress >= 2 ? "✅" : "🎧"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">${n2Label}</span>
+          <span class="text-[11px] font-black text-slate-700">2. Escuta & Frases</span>
         </div>
         <div class="flex flex-col items-center gap-1.5">
           <button onclick="startUnitLesson('${unit.id}', 'boss')" class="node-circle ${done ? 'bg-amber-400 shadow-[0_6px_0_#b45309]' : c.node} text-white text-2xl font-black">
             ${done ? "🏆" : "⭐"}
           </button>
-          <span class="text-[11px] font-black text-slate-700">${n3Label}</span>
+          <span class="text-[11px] font-black text-slate-700">3. Desafio do Mês</span>
         </div>
       </div>
       <!-- Dica Cultural -->
@@ -3385,8 +3449,8 @@ function renderVocabularyView() {
             ${mastered ? "✅ Dominada" : "+ Dominar"}
           </button>
         </div>
-        <h4 class="font-black text-base text-slate-900 leading-snug">${renderClickableFrenchText(currentCourse === "pt" ? item.pt : item.fr)}</h4>
-        <p class="text-xs font-extrabold text-emerald-700">${currentCourse === "pt" ? "🇫🇷 " + escapeHtml(item.fr) : "🇧🇷 " + escapeHtml(item.pt)}</p>
+        <h4 class="font-black text-base text-slate-900 leading-snug">${renderClickableFrenchText(item.fr)}</h4>
+        <p class="text-xs font-extrabold text-emerald-700">🇧🇷 ${escapeHtml(item.pt)}</p>
         <p class="text-[11px] font-bold text-sky-600">🗣️ [${escapeHtml(item.pron || "")}]</p>
         ${item.exFr ? `<div class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-[11px] space-y-0.5 mt-1">
           <p class="font-bold text-slate-800 italic">"${escapeHtml(item.exFr)}"</p>
