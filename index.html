@@ -2258,349 +2258,141 @@ const UI_TRANSLATIONS = {
   }
 };
 
+
+const COURSE_TEXTS = {
+  fr: {
+    brand: "Vagnilds Français",
+    subBrand: "Français avec Vagnilds • Le Français",
+    learn: "Trilha 12 Meses",
+    vocab: "Vocabulário",
+    games: "Jogos Interativos",
+    practice: "Laboratório de Pronúncia",
+    survival: "Guia Morar na França",
+    ranking: "Ranking da Turma",
+    settings: "Configurações & Voz",
+    heroTitle: "Bonjour, {name} ! Prêt pour le français ?",
+    heroSub: "Trilha estruturada do zero absoluto (A1) até a autonomia para morar, alugar imóvel, abrir conta, trabalhar e socializar na França (B1/B2).",
+    btnExam: "Provinha de Nível (Adiantar Meses)",
+    btnSmart: "Treino Inteligente (+20 XP)",
+    btnRanking: "Progresso da Turma",
+    dailyTitle: "✨ Expressão Aleatória em Francês — Clique nas palavras",
+    evoTitle: "Seu Nível Atual & Evolução",
+    vocabHeader: "Banco Completo de Vocabulário & Frases (1 Ano na França)",
+    vocabSub: "Toque em 🔊 para ouvir a pronúncia francesa nativa ou marque palavras como dominadas.",
+    gamesHeader: "Setor de Jogos Interativos em Francês",
+    practiceHeader: "Centro de Treinamento Intensivo",
+    survivalHeader: "Manual de Sobrevivência & Burocracia na França",
+    rankingHeader: "Ranking & Progresso de Todos os Usuários"
+  },
+  pt: {
+    brand: "Vagnilds Portugais",
+    subBrand: "Apprendre le portugais pour francophones",
+    learn: "Parcours 12 Mois",
+    vocab: "Vocabulaire",
+    games: "Jeux Interactifs",
+    practice: "Laboratoire de Prononciation",
+    survival: "Guide Vivre au Brésil",
+    ranking: "Classement",
+    settings: "Paramètres & Voix",
+    heroTitle: "Bonjour, {name} ! Prêt pour le portugais ?",
+    heroSub: "Parcours structuré du zéro absolu (A1) jusqu'à l'autonomie pour vivre, louer, ouvrir un compte, travailler et socialiser au Brésil (B1/B2).",
+    btnExam: "Test de Niveau (Avancer)",
+    btnSmart: "Entraînement Intelligent (+20 XP)",
+    btnRanking: "Progression du Groupe",
+    dailyTitle: "✨ Expression Aléatoire en Portugais — Cliquez sur les mots",
+    evoTitle: "Votre Niveau & Évolution",
+    vocabHeader: "Banque Complète de Vocabulaire & Phrases (1 An au Brésil)",
+    vocabSub: "Touchez 🔊 pour écouter la prononciation portugaise native.",
+    gamesHeader: "Section Jeux Interactifs en Portugais",
+    practiceHeader: "Centre d'Entraînement Intensif",
+    survivalHeader: "Manuel de Survie & Bureaucratie au Brésil",
+    rankingHeader: "Classement & Progression de Tous les Utilisateurs"
+  }
+};
+
+function applyCourseUI() {
+  const t = COURSE_TEXTS[currentCourse] || COURSE_TEXTS.fr;
+  const user = getActiveUser();
+
+  const brandEl = document.querySelector("h1.font-black.text-xl");
+  if (brandEl) brandEl.textContent = t.brand;
+
+  const setSpanText = (selector, txt) => {
+    const el = document.querySelector(selector);
+    if (el) el.textContent = txt;
+  };
+
+  setSpanText("#nav-learn span:nth-child(2)", t.learn);
+  setSpanText("#nav-vocab span:nth-child(2)", t.vocab);
+  setSpanText("#nav-games span:nth-child(2)", t.games);
+  setSpanText("#nav-practice span:nth-child(2)", t.practice);
+  setSpanText("#nav-survival span:nth-child(2)", t.survival);
+  setSpanText("#nav-ranking span div span:nth-child(2)", t.ranking);
+  setSpanText("#nav-settings div span:nth-child(2)", t.settings);
+
+  const heroNameEl = document.getElementById("heroUserName");
+  if (heroNameEl) heroNameEl.textContent = user.name;
+
+  const heroTitleEl = document.querySelector("#view-learn h2");
+  if (heroTitleEl) {
+    heroTitleEl.innerHTML = `Bonjour, <span id="heroUserName">${user.name}</span> ! ` + (currentCourse === "fr" ? "Prêt pour le français ?" : "Prêt pour le portugais ?");
+  }
+
+  const provBtn = document.querySelector("#view-learn button[onclick*='diagnostic'] span:nth-child(2)");
+  if (provBtn) provBtn.textContent = t.btnExam;
+
+  const smartBtn = document.querySelector("#view-learn button[onclick*='startQuickSmartPractice'] span:nth-child(2)");
+  if (smartBtn) smartBtn.textContent = t.btnSmart;
+
+  const rankBtn = document.querySelector("#view-learn button[onclick*=\"switchTab('ranking')\"] span:nth-child(2)");
+  if (rankBtn) rankBtn.textContent = t.btnRanking;
+
+  const dailyTitleEl = document.querySelector("#dailyRandomPhraseBar p");
+  if (dailyTitleEl) dailyTitleEl.textContent = t.dailyTitle;
+
+  const evoTitleEl = document.querySelector("#evoCardIcon + div p");
+  if (evoTitleEl) evoTitleEl.textContent = t.evoTitle;
+
+  const vocabHeaderEl = document.querySelector("#view-vocab h2");
+  if (vocabHeaderEl) vocabHeaderEl.textContent = t.vocabHeader;
+
+  const vocabSubEl = document.querySelector("#view-vocab p");
+  if (vocabSubEl) vocabSubEl.textContent = t.vocabSub;
+
+  const gamesHeaderEl = document.querySelector("#view-games h2");
+  if (gamesHeaderEl) gamesHeaderEl.textContent = t.gamesHeader;
+
+  const practiceHeaderEl = document.querySelector("#view-practice h2");
+  if (practiceHeaderEl) practiceHeaderEl.textContent = t.practiceHeader;
+
+  const survivalHeaderEl = document.querySelector("#view-survival h2");
+  if (survivalHeaderEl) survivalHeaderEl.textContent = t.survivalHeader;
+
+  const rankingHeaderEl = document.querySelector("#view-ranking h2");
+  if (rankingHeaderEl) rankingHeaderEl.textContent = t.rankingHeader;
+}
+
 function promptSwitchCourse(targetLang) {
   if (targetLang === currentCourse) {
-    showToast(targetLang === "fr" ? "Vous êtes déjà dans le cours de Français !" : "Vous êtes déjà dans le cours de Portugais !", "ℹ️");
+    showToast(targetLang === "fr" ? "Você já está no curso de Francês!" : "Vous êtes déjà dans le cours de Português!", "ℹ️");
     return;
   }
   const msg = targetLang === "fr"
     ? "Gostaria de trocar para o curso de Francês?"
-    : "Gostaria de trocar para o Curso de Português?";
+    : "Souhaitez-vous passer au cours de Português?";
   
   if (confirm(msg)) {
     currentCourse = targetLang;
-    const t = UI_TRANSLATIONS[currentCourse === "fr" ? "pt" : "fr"];
-    
-    const titleEl = document.querySelector("h1.font-black.text-xl");
-    if (titleEl) titleEl.textContent = t.brandTitle;
-    
-    const navLearnSpan = document.querySelector("#nav-learn span:nth-child(2)");
-    if (navLearnSpan) navLearnSpan.textContent = t.navLearn;
-    
-    const navVocabSpan = document.querySelector("#nav-vocab span:nth-child(2)");
-    if (navVocabSpan) navVocabSpan.textContent = t.navVocab;
-
-    const navGamesSpan = document.querySelector("#nav-games span:nth-child(2)");
-    if (navGamesSpan) navGamesSpan.textContent = t.navGames;
-
-    const navPracticeSpan = document.querySelector("#nav-practice span:nth-child(2)");
-    if (navPracticeSpan) navPracticeSpan.textContent = t.navPractice;
-
-    const navSurvivalSpan = document.querySelector("#nav-survival span:nth-child(2)");
-    if (navSurvivalSpan) navSurvivalSpan.textContent = t.navSurvival;
-
-    const navRankingSpan = document.querySelector("#nav-ranking span div span:nth-child(2)");
-    if (navRankingSpan) navRankingSpan.textContent = t.navRanking;
-
-    showToast(currentCourse === "fr" ? "Curso de Francês ativado!" : "Cours de Portugais activé !", currentCourse === "fr" ? "🇫🇷" : "🇧🇷");
+    applyCourseUI();
+    showToast(currentCourse === "fr" ? "Curso de Francês ativado!" : "Cours de Português activé !", currentCourse === "fr" ? "🇫🇷" : "🇧🇷");
     renderLearnPath();
     renderVocabularyView();
     renderDailyRandomPhrase(true);
     updateAllCountersAndHeaders();
   }
 }
-let cachedSpeechVoices = [];
-let dailyPhraseCurrent = null;
-let tabHistoryStack = [];
-let pendingPasswordSwitchUserId = null;
-let brandClickCount = 0;
-let brandClickTimer = null;
-let toastTimer = null;
-let balloonCurrentWord = "";
-let flashcardDeck = [];
-let flashcardIdx = 0;
-let activeArcadeGame = "speed";
-let speedTimerInterval = null;
-let speedGameState = null;
-let memoryGameState = null;
-let scrambleGameState = null;
-let bistroGameState = null;
-let googleAccessToken = null;
-let googleTokenClient = null;
-const ADMIN_MASTER_PASS = "vagnilds365";
 
-function escapeHtml(str) {
-  return String(str == null ? "" : str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
 
-function escapeJsStr(str) {
-  return String(str == null ? "" : str)
-    .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'")
-    .replace(/"/g, '\\"')
-    .replace(/\n/g, "\\n");
-}
-
-function normalizeFr(str) {
-  return String(str || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[’'`]/g, "'")
-    .replace(/[?!.,;:()«»"]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function shuffleArray(arr) {
-  const copy = arr.slice();
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const tmp = copy[i];
-    copy[i] = copy[j];
-    copy[j] = tmp;
-  }
-  return copy;
-}
-
-function showToast(text, icon) {
-  const banner = document.getElementById("toastBanner");
-  const iconEl = document.getElementById("toastIcon");
-  const textEl = document.getElementById("toastText");
-  if (!banner || !textEl) return;
-  if (iconEl) iconEl.textContent = icon || "✨";
-  textEl.textContent = text;
-  banner.classList.remove("hidden");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    banner.classList.add("hidden");
-  }, 3000);
-}
-
-/* ==================== VOZ FRANCESA NEURAL HD (TODOS OS DISPOSITIVOS) ==================== */
-const neuralAudioCache = {};
-let activeNeuralAudioEl = null;
-
-function refreshAvailableVoices() {
-  if (!("speechSynthesis" in window)) return;
-  const voices = window.speechSynthesis.getVoices() || [];
-  cachedSpeechVoices = voices.filter(v => /^fr/i.test(v.lang || ""));
-  populateVoiceSelectOptions();
-}
-
-function populateVoiceSelectOptions() {
-  const selects = [
-    document.getElementById("frenchVoiceSelect"),
-    document.getElementById("settingsVoiceEngineSelect")
-  ].filter(Boolean);
-  if (!selects.length) return;
-
-  const baseOptions = [
-    { val: "cloud_lea", label: "👩 Denise / Léa Neural HD (Feminina)" },
-    { val: "cloud_celine", label: "👩 Éloïse / Céline Neural HD (Feminina Suave)" },
-    { val: "cloud_henri", label: "👨 Henri Neural HD (Masculina Natural)" },
-    { val: "cloud_lucas", label: "👨 Rémy / Lucas Neural HD (Masculina Grave)" },
-    { val: "cloud_mathieu", label: "👨 Antoine / Mathieu Neural HD (Masculina)" }
-  ];
-
-  selects.forEach(sel => {
-    const current = appState.selectedVoiceName || "cloud_lea";
-    let html = `<optgroup label="✨ Vozes Neurais HD (PC, Android & iPhone)">` +
-      baseOptions.map(o => `<option value="${o.val}">${o.label}</option>`).join("") +
-      `</optgroup>`;
-    if (cachedSpeechVoices.length > 0) {
-      html += `<optgroup label="Vozes Locais do Navegador (Offline)">`;
-      cachedSpeechVoices.forEach(v => {
-        const isMale = MALE_FR_REGEX.test(v.name);
-        const icon = isMale ? "👨" : "👩";
-        html += `<option value="sys:${escapeHtml(v.name)}">${icon} ${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`;
-      });
-      html += `</optgroup>`;
-    }
-    sel.innerHTML = html;
-    if (Array.from(sel.options).some(o => o.value === current)) {
-      sel.value = current;
-    }
-  });
-  updateVoiceGenderButtonsUI();
-}
-
-function updateVoiceGenderButtonsUI() {
-  const isFemale = appState.voiceGender !== "male";
-  const pairs = [
-    ["sidebarVoiceFemaleBtn", "sidebarVoiceMaleBtn"],
-    ["settingsVoiceFemaleBtn", "settingsVoiceMaleBtn"]
-  ];
-  pairs.forEach(([fId, mId]) => {
-    const fBtn = document.getElementById(fId);
-    const mBtn = document.getElementById(mId);
-    if (fBtn) {
-      fBtn.className = fBtn.className.replace(/bg-\S+|text-\S+|border-\S+/g, "").trim() +
-        (isFemale ? " bg-sky-600 text-white border-sky-700" : " bg-white text-slate-600 border-slate-200");
-    }
-    if (mBtn) {
-      mBtn.className = mBtn.className.replace(/bg-\S+|text-\S+|border-\S+/g, "").trim() +
-        (!isFemale ? " bg-sky-600 text-white border-sky-700" : " bg-white text-slate-600 border-slate-200");
-    }
-  });
-  const hint = document.getElementById("settingsVoiceStatusHint");
-  if (hint) {
-    hint.textContent = "✨ Voz Neural HD ativa (PC, Android e iPhone sem voz robótica)";
-  }
-}
-
-function pickBestFrenchVoice() {
-  const voices = cachedSpeechVoices.length ? cachedSpeechVoices : (window.speechSynthesis ? window.speechSynthesis.getVoices().filter(v => /^fr/i.test(v.lang || "")) : []);
-  if (!voices.length) return null;
-  const sel = appState.selectedVoiceName || "";
-  if (sel.startsWith("sys:")) {
-    const exactName = sel.slice(4);
-    const found = voices.find(v => v.name === exactName);
-    if (found) return found;
-  }
-  const wantMale = appState.voiceGender === "male" || /henri|lucas|mathieu/i.test(sel);
-  const scored = voices.map(v => {
-    let score = 0;
-    if (/fr[-_]FR/i.test(v.lang)) score += 20;
-    if (/natural|neural|online/i.test(v.name)) score += 80;
-    if (/google|premium|enhanced|denise|henri|eloise|vivienne|remy/i.test(v.name)) score += 50;
-    if (/hortense|paul|julie/i.test(v.name)) score -= 25; // Penaliza vozes SAPI5 antigas e robóticas do Windows
-    if (wantMale && MALE_FR_REGEX.test(v.name)) score += 45;
-    if (!wantMale && FEMALE_FR_REGEX.test(v.name)) score += 45;
-    if (!wantMale && !MALE_FR_REGEX.test(v.name)) score += 10;
-    return { v, score };
-  }).sort((a, b) => b.score - a.score);
-  return scored[0] ? scored[0].v : voices[0];
-}
-
-function stopAllFrenchSpeech() {
-  if (activeNeuralAudioEl) {
-    try {
-      activeNeuralAudioEl.pause();
-      activeNeuralAudioEl.currentTime = 0;
-    } catch (e) {}
-    activeNeuralAudioEl = null;
-  }
-  if ("speechSynthesis" in window) {
-    try { window.speechSynthesis.cancel(); } catch (e) {}
-  }
-}
-
-function speakWithBrowserFallback(cleanText, rate) {
-  if (!("speechSynthesis" in window)) return;
-  try {
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(cleanText);
-    utter.lang = "fr-FR";
-    utter.rate = typeof rate === "number" ? rate : 0.94;
-    const sel = appState.selectedVoiceName || "";
-    const wantMale = appState.voiceGender === "male" || /henri|lucas|mathieu/i.test(sel);
-    if (sel === "cloud_lucas") utter.pitch = 0.84;
-    else if (sel === "cloud_henri" || sel === "cloud_mathieu") utter.pitch = 0.9;
-    else if (sel === "cloud_celine") utter.pitch = 1.08;
-    else utter.pitch = wantMale ? 0.9 : 1.02;
-
-    const voice = pickBestFrenchVoice();
-    if (voice) utter.voice = voice;
-    window.speechSynthesis.speak(utter);
-  } catch (e) {
-    console.warn("Browser TTS fallback error:", e);
-  }
-}
-
-async function speakFrench(text, rate) {
-  if (!text) return;
-  const cleanText = String(text).replace(/\(.*?\)/g, "").replace(/\s+/g, " ").trim();
-  if (!cleanText) return;
-
-  stopAllFrenchSpeech();
-
-  const sel = appState.selectedVoiceName || (appState.voiceGender === "male" ? "cloud_henri" : "cloud_lea");
-  // Se o usuário escolheu explicitamente uma voz local do dispositivo (sys:...)
-  if (sel.startsWith("sys:")) {
-    speakWithBrowserFallback(cleanText, rate);
-    return;
-  }
-
-  const normalizedRate = typeof rate === "number" ? rate : 0.95;
-  const voiceKey = sel.startsWith("cloud_") ? sel : (appState.voiceGender === "male" ? "cloud_henri" : "cloud_lea");
-  const cacheKey = `${voiceKey}|${normalizedRate.toFixed(2)}|${cleanText}`;
-
-  try {
-    let audioUrl = neuralAudioCache[cacheKey];
-    if (!audioUrl) {
-      const apiUrl = `/api/tts?voice=${encodeURIComponent(voiceKey)}&rate=${encodeURIComponent(normalizedRate)}&text=${encodeURIComponent(cleanText)}`;
-      const resp = await fetch(apiUrl);
-      if (!resp.ok) throw new Error("Neural TTS endpoint status " + resp.status);
-      const blob = await resp.blob();
-      if (!blob || blob.size < 200) throw new Error("Empty neural audio blob");
-      audioUrl = URL.createObjectURL(blob);
-      neuralAudioCache[cacheKey] = audioUrl;
-    }
-
-    const audio = new Audio(audioUrl);
-    activeNeuralAudioEl = audio;
-    if (normalizedRate < 0.80) {
-      audio.playbackRate = 0.85;
-    }
-    await audio.play();
-  } catch (err) {
-    // Caso esteja offline ou rodando localmente sem servidor Vercel, usa a melhor voz do navegador
-    speakWithBrowserFallback(cleanText, normalizedRate);
-  }
-}
-
-function setFrenchVoiceGender(gender) {
-  appState.voiceGender = gender === "male" ? "male" : "female";
-  if (appState.voiceGender === "male" && /lea|celine/i.test(appState.selectedVoiceName || "")) {
-    appState.selectedVoiceName = "cloud_henri";
-  } else if (appState.voiceGender === "female" && /henri|lucas|mathieu/i.test(appState.selectedVoiceName || "")) {
-    appState.selectedVoiceName = "cloud_lea";
-  }
-  saveAppState();
-  populateVoiceSelectOptions();
-  showToast(appState.voiceGender === "male" ? "Voz Neural Masculina ativada" : "Voz Neural Feminina ativada", "🗣️");
-}
-
-function handleVoiceSelectionChange() {
-  const sel = document.getElementById("frenchVoiceSelect");
-  if (!sel) return;
-  appState.selectedVoiceName = sel.value;
-  if (/henri|lucas|mathieu/i.test(sel.value) || MALE_FR_REGEX.test(sel.value)) {
-    appState.voiceGender = "male";
-  } else {
-    appState.voiceGender = "female";
-  }
-  const s2 = document.getElementById("settingsVoiceEngineSelect");
-  if (s2) s2.value = sel.value;
-  saveAppState();
-  updateVoiceGenderButtonsUI();
-}
-
-function handleSettingsVoiceSelectChange() {
-  const sel = document.getElementById("settingsVoiceEngineSelect");
-  if (!sel) return;
-  appState.selectedVoiceName = sel.value;
-  if (/henri|lucas|mathieu/i.test(sel.value) || MALE_FR_REGEX.test(sel.value)) {
-    appState.voiceGender = "male";
-  } else {
-    appState.voiceGender = "female";
-  }
-  const s1 = document.getElementById("frenchVoiceSelect");
-  if (s1) s1.value = sel.value;
-  saveAppState();
-  updateVoiceGenderButtonsUI();
-}
-
-function testSelectedFrenchVoice() {
-  speakFrench("Bonjour ! Bienvenue sur Français avec Vagnilds. Cette voix neurale est naturelle sur PC et mobile !", 0.95);
-}
-
-function speakCustomInput(rate) {
-  const inp = document.getElementById("customTtsInput");
-  if (!inp || !inp.value.trim()) {
-    showToast("Digite uma frase em francês para ouvir.", "🗣️");
-    return;
-  }
-  speakFrench(inp.value.trim(), rate || 0.95);
-}
-
-/* ==================== TRADUÇÃO PALAVRA POR PALAVRA ==================== */
 function lookupWordTranslation(word) {
   const clean = String(word || "").replace(/^[«"'(\[]+|[»"').,!?;:\]]+$/g, "").trim();
   const lower = clean.toLowerCase().replace(/’/g, "'");
