@@ -1894,6 +1894,170 @@ list.push(Object.assign({}, item, { unitId: unit.id, unitTitle: unit.title, mont
 }
 return list;
 }
+
+let currentCourse = "fr"; // "fr" = Curso de Francês (UI em PT), "pt" = Curso de Português para Franceses (UI em FR)
+
+const COURSE_UI_STRINGS = {
+  fr: {
+    brandTitle: "Vagnilds Français",
+    navLearn: "Trilha 12 Meses",
+    navVocab: "Vocabulário",
+    navGames: "Jogos Interativos",
+    navPractice: "Laboratório de Pronúncia",
+    navSurvival: "Guia Morar na França",
+    navRanking: "Ranking da Turma",
+    navSettings: "Configurações & Voz",
+    btnExam: "Provinha de Nível (Adiantar Meses)",
+    btnSmart: "Treino Inteligente (+20 XP)",
+    btnRanking: "Progresso da Turma",
+    dailyLabel: "✨ Expressão Aleatória em Francês — Clique nas palavras",
+    evoLabel: "Seu Nível Atual & Evolução",
+    vocabTitle: "📖 Banco Completo de Vocabulário & Frases (1 Ano na França)",
+    vocabSub: "Toque em 🔊 para ouvir a pronúncia francesa nativa ou marque palavras como dominadas.",
+    gamesTitle: "Setor de Jogos Interativos em Francês",
+    practiceTitle: "🎯 Centro de Treinamento Intensivo",
+    survivalTitle: "🥐 Manual de Sobrevivência & Burocracia na França",
+    rankingTitle: "Ranking & Progresso de Todos os Usuários",
+    confirmSwitchToFr: "Gostaria de trocar para o curso de Francês?",
+    confirmSwitchToPt: "Gostaria de trocar para o Curso de Português?",
+    toastSwitchedFr: "Curso de Francês ativado! Tudo em português para aprender francês.",
+    toastSwitchedPt: "Cours de Portugais activé ! Interface en français pour apprendre le portugais."
+  },
+  pt: {
+    brandTitle: "Vagnilds Portugais",
+    navLearn: "Parcours 12 Mois",
+    navVocab: "Vocabulaire",
+    navGames: "Jeux Interactifs",
+    navPractice: "Laboratoire de Prononciation",
+    navSurvival: "Guide Vivre au Brésil",
+    navRanking: "Classement",
+    navSettings: "Paramètres & Voix",
+    btnExam: "Test de Niveau (Avancer)",
+    btnSmart: "Entraînement Intelligent (+20 XP)",
+    btnRanking: "Progression du Groupe",
+    dailyLabel: "✨ Expression Aléatoire en Portugais — Cliquez sur les mots",
+    evoLabel: "Votre Niveau & Évolution",
+    vocabTitle: "📖 Banque Complète de Vocabulaire & Phrases (1 An au Brésil)",
+    vocabSub: "Touchez 🔊 pour écouter la prononciation portugaise native ou marquez les mots maîtrisés.",
+    gamesTitle: "Section Jeux Interactifs en Portugais",
+    practiceTitle: "🎯 Centre d'Entraînement Intensif",
+    survivalTitle: "🥐 Manuel de Survie & Bureaucratie au Brésil",
+    rankingTitle: "Classement & Progression de Tous les Utilisateurs",
+    confirmSwitchToFr: "Gostaria de trocar para o curso de Francês?",
+    confirmSwitchToPt: "Gostaria de trocar para o Curso de Português?",
+    toastSwitchedFr: "Curso de Francês ativado !",
+    toastSwitchedPt: "Cours de Portugais activé !"
+  }
+};
+
+function getTargetPhrase(item) {
+  if (!item) return "";
+  if (currentCourse === "pt") {
+    return item.exPt || item.pt || "";
+  }
+  return item.exFr || item.fr || "";
+}
+
+function getTargetWord(item) {
+  if (!item) return "";
+  if (currentCourse === "pt") {
+    return item.pt || "";
+  }
+  return item.fr || "";
+}
+
+function getHelperTranslation(item) {
+  if (!item) return "";
+  if (currentCourse === "pt") {
+    return item.exFr || item.fr || "";
+  }
+  return item.exPt || item.pt || "";
+}
+
+function speakCourseAudio(text, rate) {
+  if (!text) return;
+  if (currentCourse === "pt") {
+    const prevVoice = appState.selectedVoiceName;
+    appState.selectedVoiceName = (appState.voiceGender === "male") ? "pt_antonio" : "pt_francisca";
+    Promise.resolve(speakFrench(text, rate)).finally(() => {
+      appState.selectedVoiceName = prevVoice;
+    });
+  } else {
+    speakFrench(text, rate);
+  }
+}
+
+function applyCourseTranslations() {
+  const s = COURSE_UI_STRINGS[currentCourse] || COURSE_UI_STRINGS.fr;
+  const user = getActiveUser();
+
+  const brandEl = document.querySelector("h1.font-black.text-xl");
+  if (brandEl) brandEl.textContent = s.brandTitle;
+
+  const setTextBySelector = (sel, txt) => {
+    const el = document.querySelector(sel);
+    if (el) el.textContent = txt;
+  };
+
+  setTextBySelector("#nav-learn span:nth-child(2)", s.navLearn);
+  setTextBySelector("#nav-vocab span:nth-child(2)", s.navVocab);
+  setTextBySelector("#nav-games span:nth-child(2)", s.navGames);
+  setTextBySelector("#nav-practice span:nth-child(2)", s.navPractice);
+  setTextBySelector("#nav-survival span:nth-child(2)", s.navSurvival);
+  setTextBySelector("#nav-ranking span div span:nth-child(2)", s.navRanking);
+  setTextBySelector("#nav-settings div span:nth-child(2)", s.navSettings);
+
+  const heroTitleEl = document.querySelector("#view-learn h2");
+  if (heroTitleEl) {
+    const name = user ? user.name : "Vagner";
+    heroTitleEl.innerHTML = currentCourse === "pt"
+      ? `Bonjour, <span id="heroUserName">${escapeHtml(name)}</span> ! Prêt pour le portugais ?`
+      : `Bonjour, <span id="heroUserName">${escapeHtml(name)}</span> ! Prêt pour le français ?`;
+  }
+
+  setTextBySelector("#view-learn button[onclick*='diagnostic'] span:nth-child(2)", s.btnExam);
+  setTextBySelector("#view-learn button[onclick*='startQuickSmartPractice'] span:nth-child(2)", s.btnSmart);
+  setTextBySelector("#view-learn button[onclick*=\"switchTab('ranking')\"] span:nth-child(2)", s.btnRanking);
+  setTextBySelector("#dailyRandomPhraseBar p", s.dailyLabel);
+  setTextBySelector("#evoCardIcon + div p", s.evoLabel);
+  setTextBySelector("#view-vocab h2", s.vocabTitle);
+  setTextBySelector("#view-vocab p", s.vocabSub);
+  setTextBySelector("#view-games h2", s.gamesTitle);
+  setTextBySelector("#view-practice h2", s.practiceTitle);
+  setTextBySelector("#view-survival h2", s.survivalTitle);
+  setTextBySelector("#view-ranking h2", s.rankingTitle);
+}
+
+function promptSwitchCourse(targetLang) {
+  if (targetLang === currentCourse) {
+    showToast(
+      targetLang === "fr"
+        ? "Você já está no curso de Francês!"
+        : "Vous êtes déjà dans le cours de Portugais !",
+      "ℹ️"
+    );
+    return;
+  }
+  const msg = targetLang === "fr"
+    ? "Gostaria de trocar para o curso de Francês?"
+    : "Gostaria de trocar para o Curso de Português?";
+
+  if (confirm(msg)) {
+    currentCourse = targetLang;
+    applyCourseTranslations();
+    renderDailyRandomPhrase(true);
+    renderLearnPath();
+    renderVocabularyView();
+    updateAllCountersAndHeaders();
+    showToast(
+      currentCourse === "fr"
+        ? COURSE_UI_STRINGS.fr.toastSwitchedFr
+        : COURSE_UI_STRINGS.pt.toastSwitchedPt,
+      currentCourse === "fr" ? "🇫🇷" : "🇧🇷"
+    );
+  }
+}
+
 function getLeagueInfo(xp) {
 if (xp >= 1400) return { name: "Diamante", icon: "💎", badgeClass: "bg-cyan-100 text-cyan-800 border-cyan-300" };
 if (xp >= 1100) return { name: "Esmeralda", icon: "💚", badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-300" };
@@ -2193,206 +2357,6 @@ const BASIC_FR_PT_DICT = {
 
 
 
-const UI_TRANSLATIONS = {
-  pt: {
-    brandTitle: "Vagnilds Français",
-    subBrand: "Français avec Vagnilds • Le Français",
-    navLearn: "Trilha 12 Meses",
-    navVocab: "Vocabulário",
-    navGames: "Jogos Interativos",
-    navPractice: "Laboratório de Pronúncia",
-    navSurvival: "Guia Morar na França",
-    navRanking: "Ranking da Turma",
-    navSettings: "Configurações & Voz",
-    metaTitle: "Fluência e Mudança para a França (1 Ano)",
-    heroTitle: "Bonjour, {name} ! Prêt pour le français ?",
-    heroSub: "Trilha estruturada do zero absoluto (A1) até a autonomia para morar, alugar imóvel, abrir conta, trabalhar e socializar na França (B1/B2).",
-    btnExam: "Provinha de Nível (Adiantar Meses)",
-    btnSmart: "Treino Inteligente (+20 XP)",
-    btnRanking: "Progresso da Turma",
-    dailyTitle: "✨ Expressão Aleatória em Francês — Clique nas palavras",
-    evoTitle: "Seu Nível Atual & Evolução",
-    vocabTitle: "Banco Completo de Vocabulário & Frases (1 Ano na França)",
-    vocabSub: "Toque em 🔊 para ouvir a pronúncia francesa nativa ou marque palavras como dominadas.",
-    gamesTitle: "Setor de Jogos Interativos em Francês",
-    practiceTitle: "Centro de Treinamento Intensivo",
-    survivalTitle: "Manual de Sobrevivência & Burocracia na França",
-    rankingTitle: "Ranking & Progresso de Todos os Usuários",
-    modalUser: "Perfis de Estudantes",
-    modalSettings: "Configurações — Vagnilds Français",
-    confirmFr: "Gostaria de trocar para o curso de Francês?",
-    toastFr: "Curso de Francês ativado!",
-    cloudSync: "Sincronizar com a Nuvem",
-    cloudActive: "Nuvem Ativa"
-  },
-  fr: {
-    brandTitle: "Vagnilds Portugais",
-    subBrand: "Apprendre le portugais pour francophones",
-    navLearn: "Parcours 12 Mois",
-    navVocab: "Vocabulaire",
-    navGames: "Jeux Interactifs",
-    navPractice: "Laboratoire de Prononciation",
-    navSurvival: "Guide Vivre au Brésil",
-    navRanking: "Classement",
-    navSettings: "Paramètres & Voix",
-    metaTitle: "Maîtrise et Installation au Brésil (1 An)",
-    heroTitle: "Bonjour, {name} ! Prêt pour le portugais ?",
-    heroSub: "Parcours structuré du zéro absolu (A1) jusqu'à l'autonomie pour vivre, louer, ouvrir un compte, travailler et socialiser au Brésil (B1/B2).",
-    btnExam: "Test de Niveau (Avancer)",
-    btnSmart: "Entraînement Intelligent (+20 XP)",
-    btnRanking: "Progression du Groupe",
-    dailyTitle: "✨ Expression Aléatoire en Portugais — Cliquez sur les mots",
-    evoTitle: "Votre Niveau & Évolution",
-    vocabTitle: "Banque Complète de Vocabulaire & Phrases (1 An au Brésil)",
-    vocabSub: "Touchez 🔊 pour écouter la prononciation portugaise native.",
-    gamesTitle: "Section Jeux Interactifs en Portugais",
-    practiceTitle: "Centre d'Entraînement Intensif",
-    survivalTitle: "Manuel de Survie & Bureaucratie au Brésil",
-    rankingTitle: "Classement & Progression de Tous les Utilisateurs",
-    modalUser: "Profils d'Étudiants",
-    modalSettings: "Paramètres — Vagnilds Portugais",
-    confirmPt: "Souhaitez-vous passer au cours de Portugais ?",
-    toastPt: "Cours de Português activé !",
-    cloudSync: "Synchroniser avec le Cloud",
-    cloudActive: "Cloud Actif"
-  }
-};
-
-
-const COURSE_TEXTS = {
-  fr: {
-    brand: "Vagnilds Français",
-    subBrand: "Français avec Vagnilds • Le Français",
-    learn: "Trilha 12 Meses",
-    vocab: "Vocabulário",
-    games: "Jogos Interativos",
-    practice: "Laboratório de Pronúncia",
-    survival: "Guia Morar na França",
-    ranking: "Ranking da Turma",
-    settings: "Configurações & Voz",
-    heroTitle: "Bonjour, {name} ! Prêt pour le français ?",
-    heroSub: "Trilha estruturada do zero absoluto (A1) até a autonomia para morar, alugar imóvel, abrir conta, trabalhar e socializar na França (B1/B2).",
-    btnExam: "Provinha de Nível (Adiantar Meses)",
-    btnSmart: "Treino Inteligente (+20 XP)",
-    btnRanking: "Progresso da Turma",
-    dailyTitle: "✨ Expressão Aleatória em Francês — Clique nas palavras",
-    evoTitle: "Seu Nível Atual & Evolução",
-    vocabHeader: "Banco Completo de Vocabulário & Frases (1 Ano na França)",
-    vocabSub: "Toque em 🔊 para ouvir a pronúncia francesa nativa ou marque palavras como dominadas.",
-    gamesHeader: "Setor de Jogos Interativos em Francês",
-    practiceHeader: "Centro de Treinamento Intensivo",
-    survivalHeader: "Manual de Sobrevivência & Burocracia na França",
-    rankingHeader: "Ranking & Progresso de Todos os Usuários"
-  },
-  pt: {
-    brand: "Vagnilds Portugais",
-    subBrand: "Apprendre le portugais pour francophones",
-    learn: "Parcours 12 Mois",
-    vocab: "Vocabulaire",
-    games: "Jeux Interactifs",
-    practice: "Laboratoire de Prononciation",
-    survival: "Guide Vivre au Brésil",
-    ranking: "Classement",
-    settings: "Paramètres & Voix",
-    heroTitle: "Bonjour, {name} ! Prêt pour le portugais ?",
-    heroSub: "Parcours structuré du zéro absolu (A1) jusqu'à l'autonomie pour vivre, louer, ouvrir un compte, travailler et socialiser au Brésil (B1/B2).",
-    btnExam: "Test de Niveau (Avancer)",
-    btnSmart: "Entraînement Intelligent (+20 XP)",
-    btnRanking: "Progression du Groupe",
-    dailyTitle: "✨ Expression Aléatoire en Portugais — Cliquez sur les mots",
-    evoTitle: "Votre Niveau & Évolution",
-    vocabHeader: "Banque Complète de Vocabulaire & Phrases (1 An au Brésil)",
-    vocabSub: "Touchez 🔊 pour écouter la prononciation portugaise native.",
-    gamesHeader: "Section Jeux Interactifs en Portugais",
-    practiceHeader: "Centre d'Entraînement Intensif",
-    survivalHeader: "Manuel de Survie & Bureaucratie au Brésil",
-    rankingHeader: "Classement & Progression de Tous les Utilisateurs"
-  }
-};
-
-function applyCourseUI() {
-  const t = COURSE_TEXTS[currentCourse] || COURSE_TEXTS.fr;
-  const user = getActiveUser();
-
-  const brandEl = document.querySelector("h1.font-black.text-xl");
-  if (brandEl) brandEl.textContent = t.brand;
-
-  const setSpanText = (selector, txt) => {
-    const el = document.querySelector(selector);
-    if (el) el.textContent = txt;
-  };
-
-  setSpanText("#nav-learn span:nth-child(2)", t.learn);
-  setSpanText("#nav-vocab span:nth-child(2)", t.vocab);
-  setSpanText("#nav-games span:nth-child(2)", t.games);
-  setSpanText("#nav-practice span:nth-child(2)", t.practice);
-  setSpanText("#nav-survival span:nth-child(2)", t.survival);
-  setSpanText("#nav-ranking span div span:nth-child(2)", t.ranking);
-  setSpanText("#nav-settings div span:nth-child(2)", t.settings);
-
-  const heroNameEl = document.getElementById("heroUserName");
-  if (heroNameEl) heroNameEl.textContent = user.name;
-
-  const heroTitleEl = document.querySelector("#view-learn h2");
-  if (heroTitleEl) {
-    heroTitleEl.innerHTML = `Bonjour, <span id="heroUserName">${user.name}</span> ! ` + (currentCourse === "fr" ? "Prêt pour le français ?" : "Prêt pour le portugais ?");
-  }
-
-  const provBtn = document.querySelector("#view-learn button[onclick*='diagnostic'] span:nth-child(2)");
-  if (provBtn) provBtn.textContent = t.btnExam;
-
-  const smartBtn = document.querySelector("#view-learn button[onclick*='startQuickSmartPractice'] span:nth-child(2)");
-  if (smartBtn) smartBtn.textContent = t.btnSmart;
-
-  const rankBtn = document.querySelector("#view-learn button[onclick*=\"switchTab('ranking')\"] span:nth-child(2)");
-  if (rankBtn) rankBtn.textContent = t.btnRanking;
-
-  const dailyTitleEl = document.querySelector("#dailyRandomPhraseBar p");
-  if (dailyTitleEl) dailyTitleEl.textContent = t.dailyTitle;
-
-  const evoTitleEl = document.querySelector("#evoCardIcon + div p");
-  if (evoTitleEl) evoTitleEl.textContent = t.evoTitle;
-
-  const vocabHeaderEl = document.querySelector("#view-vocab h2");
-  if (vocabHeaderEl) vocabHeaderEl.textContent = t.vocabHeader;
-
-  const vocabSubEl = document.querySelector("#view-vocab p");
-  if (vocabSubEl) vocabSubEl.textContent = t.vocabSub;
-
-  const gamesHeaderEl = document.querySelector("#view-games h2");
-  if (gamesHeaderEl) gamesHeaderEl.textContent = t.gamesHeader;
-
-  const practiceHeaderEl = document.querySelector("#view-practice h2");
-  if (practiceHeaderEl) practiceHeaderEl.textContent = t.practiceHeader;
-
-  const survivalHeaderEl = document.querySelector("#view-survival h2");
-  if (survivalHeaderEl) survivalHeaderEl.textContent = t.survivalHeader;
-
-  const rankingHeaderEl = document.querySelector("#view-ranking h2");
-  if (rankingHeaderEl) rankingHeaderEl.textContent = t.rankingHeader;
-}
-
-function promptSwitchCourse(targetLang) {
-  if (targetLang === currentCourse) {
-    showToast(targetLang === "fr" ? "Você já está no curso de Francês!" : "Vous êtes déjà dans le cours de Português!", "ℹ️");
-    return;
-  }
-  const msg = targetLang === "fr"
-    ? "Gostaria de trocar para o curso de Francês?"
-    : "Souhaitez-vous passer au cours de Português?";
-  
-  if (confirm(msg)) {
-    currentCourse = targetLang;
-    applyCourseUI();
-    showToast(currentCourse === "fr" ? "Curso de Francês ativado!" : "Cours de Português activé !", currentCourse === "fr" ? "🇫🇷" : "🇧🇷");
-    renderLearnPath();
-    renderVocabularyView();
-    renderDailyRandomPhrase(true);
-    updateAllCountersAndHeaders();
-  }
-}
-
-
 function lookupWordTranslation(word) {
   const clean = String(word || "").replace(/^[«"'(\[]+|[»"').,!?;:\]]+$/g, "").trim();
   const lower = clean.toLowerCase().replace(/’/g, "'");
@@ -2473,15 +2437,21 @@ function renderDailyRandomPhrase(forceNew) {
   }
   const frEl = document.getElementById("dailyPhraseFr");
   const ptEl = document.getElementById("dailyPhrasePt");
-  if (frEl) frEl.innerHTML = renderClickableFrenchText(dailyPhraseCurrent.exFr || dailyPhraseCurrent.fr);
+  const mainText = getTargetPhrase(dailyPhraseCurrent);
+  const subText = getHelperTranslation(dailyPhraseCurrent);
+  if (frEl) frEl.innerHTML = renderClickableFrenchText(mainText);
   if (ptEl) {
-    ptEl.innerHTML = `🇧🇷 ${escapeHtml(dailyPhraseCurrent.exPt || dailyPhraseCurrent.pt)} • <span class="text-sky-600">[${escapeHtml(dailyPhraseCurrent.pron || "")}]</span>`;
+    const flag = currentCourse === "pt" ? "🇫🇷" : "🇧🇷";
+    ptEl.innerHTML = `${flag} ${escapeHtml(subText)} • <span class="text-sky-600">[${escapeHtml(dailyPhraseCurrent.pron || "")}]</span>`;
   }
 }
 
 function speakDailyRandomPhrase(rate) {
   if (!dailyPhraseCurrent) renderDailyRandomPhrase(false);
-  if (dailyPhraseCurrent) speakFrench(dailyPhraseCurrent.exFr || dailyPhraseCurrent.fr, rate || 0.94);
+  if (dailyPhraseCurrent) {
+    const txt = getTargetPhrase(dailyPhraseCurrent);
+    speakCourseAudio(txt, rate || 0.94);
+  }
 }
 
 /* ==================== NAVEGAÇÃO & SIDEBAR ==================== */
@@ -3356,8 +3326,8 @@ function renderVocabularyView() {
             ${mastered ? "✅ Dominada" : "+ Dominar"}
           </button>
         </div>
-        <h4 class="font-black text-base text-slate-900 leading-snug">${renderClickableFrenchText(item.fr)}</h4>
-        <p class="text-xs font-extrabold text-emerald-700">🇧🇷 ${escapeHtml(item.pt)}</p>
+        <h4 class="font-black text-base text-slate-900 leading-snug">${renderClickableFrenchText(currentCourse === "pt" ? item.pt : item.fr)}</h4>
+        <p class="text-xs font-extrabold text-emerald-700">${currentCourse === "pt" ? "🇫🇷 " + escapeHtml(item.fr) : "🇧🇷 " + escapeHtml(item.pt)}</p>
         <p class="text-[11px] font-bold text-sky-600">🗣️ [${escapeHtml(item.pron || "")}]</p>
         ${item.exFr ? `<div class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-[11px] space-y-0.5 mt-1">
           <p class="font-bold text-slate-800 italic">"${escapeHtml(item.exFr)}"</p>
