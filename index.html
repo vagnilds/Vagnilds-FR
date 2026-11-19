@@ -2192,11 +2192,75 @@ const BASIC_FR_PT_DICT = {
 };
 
 
-let currentCourse = "fr"; // "fr" (Francês para BR) ou "pt" (Português para FR)
+
+const UI_TRANSLATIONS = {
+  pt: {
+    brandTitle: "Vagnilds Français",
+    subBrand: "Français avec Vagnilds • Le Français",
+    navLearn: "Trilha 12 Meses",
+    navVocab: "Vocabulário",
+    navGames: "Jogos Interativos",
+    navPractice: "Laboratório de Pronúncia",
+    navSurvival: "Guia Morar na França",
+    navRanking: "Ranking da Turma",
+    navSettings: "Configurações & Voz",
+    metaTitle: "Fluência e Mudança para a França (1 Ano)",
+    heroTitle: "Bonjour, {name} ! Prêt pour le français ?",
+    heroSub: "Trilha estruturada do zero absoluto (A1) até a autonomia para morar, alugar imóvel, abrir conta, trabalhar e socializar na França (B1/B2).",
+    btnExam: "Provinha de Nível (Adiantar Meses)",
+    btnSmart: "Treino Inteligente (+20 XP)",
+    btnRanking: "Progresso da Turma",
+    dailyTitle: "✨ Expressão Aleatória em Francês — Clique nas palavras",
+    evoTitle: "Seu Nível Atual & Evolução",
+    vocabTitle: "Banco Completo de Vocabulário & Frases (1 Ano na França)",
+    vocabSub: "Toque em 🔊 para ouvir a pronúncia francesa nativa ou marque palavras como dominadas.",
+    gamesTitle: "Setor de Jogos Interativos em Francês",
+    practiceTitle: "Centro de Treinamento Intensivo",
+    survivalTitle: "Manual de Sobrevivência & Burocracia na França",
+    rankingTitle: "Ranking & Progresso de Todos os Usuários",
+    modalUser: "Perfis de Estudantes",
+    modalSettings: "Configurações — Vagnilds Français",
+    confirmFr: "Gostaria de trocar para o curso de Francês?",
+    toastFr: "Curso de Francês ativado!",
+    cloudSync: "Sincronizar com a Nuvem",
+    cloudActive: "Nuvem Ativa"
+  },
+  fr: {
+    brandTitle: "Vagnilds Portugais",
+    subBrand: "Apprendre le portugais pour francophones",
+    navLearn: "Parcours 12 Mois",
+    navVocab: "Vocabulaire",
+    navGames: "Jeux Interactifs",
+    navPractice: "Laboratoire de Prononciation",
+    navSurvival: "Guide Vivre au Brésil",
+    navRanking: "Classement",
+    navSettings: "Paramètres & Voix",
+    metaTitle: "Maîtrise et Installation au Brésil (1 An)",
+    heroTitle: "Bonjour, {name} ! Prêt pour le portugais ?",
+    heroSub: "Parcours structuré du zéro absolu (A1) jusqu'à l'autonomie pour vivre, louer, ouvrir un compte, travailler et socialiser au Brésil (B1/B2).",
+    btnExam: "Test de Niveau (Avancer)",
+    btnSmart: "Entraînement Intelligent (+20 XP)",
+    btnRanking: "Progression du Groupe",
+    dailyTitle: "✨ Expression Aléatoire en Portugais — Cliquez sur les mots",
+    evoTitle: "Votre Niveau & Évolution",
+    vocabTitle: "Banque Complète de Vocabulaire & Phrases (1 An au Brésil)",
+    vocabSub: "Touchez 🔊 pour écouter la prononciation portugaise native.",
+    gamesTitle: "Section Jeux Interactifs en Portugais",
+    practiceTitle: "Centre d'Entraînement Intensif",
+    survivalTitle: "Manuel de Survie & Bureaucratie au Brésil",
+    rankingTitle: "Classement & Progression de Tous les Utilisateurs",
+    modalUser: "Profils d'Étudiants",
+    modalSettings: "Paramètres — Vagnilds Portugais",
+    confirmPt: "Souhaitez-vous passer au cours de Portugais ?",
+    toastPt: "Cours de Português activé !",
+    cloudSync: "Synchroniser avec le Cloud",
+    cloudActive: "Cloud Actif"
+  }
+};
 
 function promptSwitchCourse(targetLang) {
   if (targetLang === currentCourse) {
-    showToast(targetLang === "fr" ? "Você já está no curso de Francês!" : "Você já está no curso de Português!", "ℹ️");
+    showToast(targetLang === "fr" ? "Vous êtes déjà dans le cours de Français !" : "Vous êtes déjà dans le cours de Portugais !", "ℹ️");
     return;
   }
   const msg = targetLang === "fr"
@@ -2205,18 +2269,36 @@ function promptSwitchCourse(targetLang) {
   
   if (confirm(msg)) {
     currentCourse = targetLang;
+    const t = UI_TRANSLATIONS[currentCourse === "fr" ? "pt" : "fr"];
+    
     const titleEl = document.querySelector("h1.font-black.text-xl");
-    if (titleEl) {
-      titleEl.textContent = currentCourse === "fr" ? "Vagnilds Français" : "Vagnilds Português";
-    }
-    showToast(currentCourse === "fr" ? "Curso de Francês ativado!" : "Curso de Português ativado!", currentCourse === "fr" ? "🇫🇷" : "🇧🇷");
+    if (titleEl) titleEl.textContent = t.brandTitle;
+    
+    const navLearnSpan = document.querySelector("#nav-learn span:nth-child(2)");
+    if (navLearnSpan) navLearnSpan.textContent = t.navLearn;
+    
+    const navVocabSpan = document.querySelector("#nav-vocab span:nth-child(2)");
+    if (navVocabSpan) navVocabSpan.textContent = t.navVocab;
+
+    const navGamesSpan = document.querySelector("#nav-games span:nth-child(2)");
+    if (navGamesSpan) navGamesSpan.textContent = t.navGames;
+
+    const navPracticeSpan = document.querySelector("#nav-practice span:nth-child(2)");
+    if (navPracticeSpan) navPracticeSpan.textContent = t.navPractice;
+
+    const navSurvivalSpan = document.querySelector("#nav-survival span:nth-child(2)");
+    if (navSurvivalSpan) navSurvivalSpan.textContent = t.navSurvival;
+
+    const navRankingSpan = document.querySelector("#nav-ranking span div span:nth-child(2)");
+    if (navRankingSpan) navRankingSpan.textContent = t.navRanking;
+
+    showToast(currentCourse === "fr" ? "Curso de Francês ativado!" : "Cours de Portugais activé !", currentCourse === "fr" ? "🇫🇷" : "🇧🇷");
     renderLearnPath();
     renderVocabularyView();
     renderDailyRandomPhrase(true);
     updateAllCountersAndHeaders();
   }
 }
-
 let cachedSpeechVoices = [];
 let dailyPhraseCurrent = null;
 let tabHistoryStack = [];
